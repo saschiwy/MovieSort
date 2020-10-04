@@ -1,3 +1,4 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JBK73YUVW7MGW&source=url)
 
 # FileSort
 Still under deployment, neither the software nor the documentation is finished yet.
@@ -82,5 +83,5 @@ pip install tmdbv3api
 Feel free to send pull requests, use git-flow-workflow.
 
 ## Credits
-[Anthony Bloomer](https://github.com/AnthonyBloomer)
-[The Movie Database](https://www.themoviedb.org/)
+- [Anthony Bloomer](https://github.com/AnthonyBloomer)
+- [The Movie Database](https://www.themoviedb.org/)

@@ -14,10 +14,30 @@ CmdConfig = {
     "language" : "en",
     "dump_data" : True, 
     "dump_renaming_list" : True,
-    "auto_rename" : False,
+    "auto_rename" : True,
     "set_auto_id": False,
     "tmp_folder" : "./tmp/",
     "refetch_data" : False,
-    "overwrite_existing" : False,
-    "ignore_pattern": ["*.nfo", "*.jpg", "*.htm", "*.html", '*.txt', "*.png", "*sample*"]
+    "overwrite_files" : False,
+    "ignore_pattern": ["*.nfo", "*.jpg", "*.htm", "*.html", "*.url", '*.txt', "*.png", "*sample*", "*proof*"]
 }
+
+def getConfigParam(config : dict(), keys : []):
+    param  = config
+    failed = False
+    
+    for key in keys:
+        if key in param:
+            param = param[key]
+            continue
+        else:
+            failed = True
+            break
+
+    if failed:
+        param = CmdConfig
+        for key in keys:
+            param = param[key]
+
+        print(["WARN: Could not read parameter for keys: ", keys, " use default: ", param])
+    return param

@@ -1,30 +1,27 @@
 from .filenameParser import FilenameParser
+from .movie import Movie
 
-class Episode():
+class Episode(Movie):
     
     seasonNumber        = None
     episodeNumber       = None
     episodeString       = None
-    file                = None
-    estimatedTitle      = None
     isShow              = None
-    estimatedTitleFrags = None
-    databaseTitle       = None
 
     def __init__(self):
+        Movie.__init__(self)
         self.seasonNumber        = 0
         self.episodeNumber       = 0
         self.episodeString       = ''
-        self.file                = FilenameParser()
-        self.estimatedTitle      = ''
         self.isShow              = False
-        self.estimatedTitleFrags = []
-        self.databaseTitle       = ''
     
     def parse(self, name : str):
-        self.file.parse(name)
-
-        for s in self.file.parsedNames:
+        Movie.parse(self, name)
+        
+        eFrags = self.estimatedTitleFrags
+        self.estimatedTitleFrags = []
+        
+        for s in eFrags:
             result = self.file.parseSeasonAndEpisode(s)
             if result[0]:
                 self.isShow        = True
@@ -38,28 +35,20 @@ class Episode():
         self.estimatedTitle = ' '.join(self.estimatedTitleFrags)
     
     def serialize(self):
-        j = dict()
+        j = Movie.serialize(self)
         j['seasonNumber']        = self.seasonNumber       
         j['episodeNumber']       = self.episodeNumber      
         j['episodeString']       = self.episodeString      
-        j['file']                = self.file.serialize()        
-        j['estimatedTitle']      = self.estimatedTitle     
         j['isShow']              = self.isShow             
-        j['estimatedTitleFrags'] = self.estimatedTitleFrags
-        j['databaseTitle']       = self.databaseTitle      
         return j
 
     def deserialize(self, j: dict()):
         self.__init__()
+        Movie.deserialize(self, j)
         self.seasonNumber        = j['seasonNumber']       
         self.episodeNumber       = j['episodeNumber']      
         self.episodeString       = j['episodeString']      
-        self.file                = FilenameParser()
-        self.file.deserialize(j['file'])
-        self.estimatedTitle      = j['estimatedTitle']     
         self.isShow              = j['isShow']             
-        self.estimatedTitleFrags = j['estimatedTitleFrags']
-        self.databaseTitle       = j['databaseTitle']      
 
 class Season():
     episodes     = None

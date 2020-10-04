@@ -4,30 +4,20 @@ from .tvShow import Episode
 from tmdbv3api import TMDb
 from tmdbv3api import TV
 from tmdbv3api import Season
-from tmdbv3api.as_obj import AsObj
 
-import unicodedata
-import string
+from .fops import removeDisallowedFilenameChars
 
-validFilenameChars = ":-_.()/ %s%s" % (string.ascii_letters, string.digits)
-
-def removeDisallowedFilenameChars(filename):
-    cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('utf-8')
-    return ''.join(c for c in cleanedFilename if c in validFilenameChars)
-
-class EpisodeMatcherTMDb():
+class EpisodeMatcher():
     
     matchedFiles = None
     files        = None
-    tvShows      = None
+    tvShows      = dict()
     showDetails  = None
     outputFormat = "./%n (%y)/Season %0s/%n (%y) - S%0sE%0e - %t.%x"
 
     def __init__(self):
         self.files        = []
         self.tvShows      = dict()
-        self.setLanguage('en')
-        self.setApiKey('e24fcd17eff0cfe0064fa7b5cb05b97d')
         self.matchedFiles = []
 
     def __getShows__ (self, files : []):
@@ -84,6 +74,13 @@ class EpisodeMatcherTMDb():
                 .replace('%00e', str(episodeNumber).zfill(3)) \
                 .replace('%x', extension) \
                 .replace('%y', str(year))
+
+class EpisodeMatcherTMDb(EpisodeMatcher):
+
+    def __init__(self):
+        EpisodeMatcher.__init__(self)
+        self.setLanguage('en')
+        self.setApiKey('e24fcd17eff0cfe0064fa7b5cb05b97d')
 
     def setLanguage (self, lang):
         TMDb().language = lang

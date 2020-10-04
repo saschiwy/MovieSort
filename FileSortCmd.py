@@ -9,60 +9,24 @@ __maintainer__ = "Sascha Schiwy"
 __email__      = "sascha.schiwy@gmail.com"
 __status__     = "Production"
 
-import sys, getopt, json, os, shutil, fnmatch
+import sys, getopt, json, os, fnmatch
 
-from core.cmdConfig import CmdConfig
+from core.cmdConfig import getConfigParam
 from core.episodeMatcher import EpisodeMatcherTMDb, TvShow
+from core.movieMatcher import MovieMatcherTMDb, Movie
+from core.fops import getFileList, moveFiles
 
 def printHelp():
     print('FileSortCmd -c <ConfigFile> [-d <DumpFile]')
     print('FileSortCmd -c <ConfigFile> -r <RenameFile>')
 
-def moveFiles(files : [], overwrite : bool):
-    for source, target in files:
-        pos       = target.rfind("/")
-        targetDir = "./"
-        if pos != -1:
-            targetDir = target[:pos]
-        
-        # check if directory exists or not yet
-        if not os.path.exists(targetDir):
-            os.makedirs(targetDir)
-
-        if os.path.isfile(target) and overwrite:
-            os.remove(target)
-
-        if os.path.exists(targetDir):
-            print ('move ' + source + ' target' + target)
-            shutil.move(source, target)
-
-def getConfigParam(config : dict(), keys : []):
-    param  = config
-    failed = False
-    
-    for key in keys:
-        if key in param:
-            param = param[key]
-            continue
-        else:
-            failed = True
-            break
-
-    if failed:
-        param = CmdConfig
-        for key in keys:
-            param = param[key]
-
-        print(["WARN: Could not read parameter for keys: ", keys, " use default: ", param])
-    return param
-
 def createShowDump(config : dict(), dumpFile : str):
-    
+
     refetch = bool(getConfigParam(config, ["refetch_data"]))
     matcher = EpisodeMatcherTMDb()
     matcher.setLanguage(getConfigParam(config, ["language"]))
     matcher.outputFormat = getConfigParam(config, ["tv_show_mode", "output_format"])
-    
+
     if len(dumpFile) > 0:
         with open(dumpFile, "r") as readFile:
             data = json.load(readFile)
@@ -70,54 +34,65 @@ def createShowDump(config : dict(), dumpFile : str):
                 show = TvShow()
                 show.deserialize(d)
                 matcher.tvShows[show] = None
-        
+
         if not refetch:
             return matcher
-    
+
     else:
-        matcher = parseFolder(config, matcher)
-    
+        matcher = parseShowFolder(config, matcher)
+
     # Fetch
     for show in matcher.tvShows.keys():
-        matcher.fetchDetails(show, show.id)
+        matcher.fetchDetails(show, show.databaseId)
     return matcher
 
-def isFileToBeAddToList(file, ignorePattern):
-    for x in ignorePattern:
-        if fnmatch.fnmatch(file, x):
-            return False
-    return True
+def createMovieDump(config : dict(), dumpFile : str):
 
-def getFileList(path, ignorePattern):
-    fileList = []
+    refetch = bool(getConfigParam(config, ["refetch_data"]))
+    matcher = MovieMatcherTMDb('./')
+    matcher.setLanguage(getConfigParam(config, ["language"]))
+    matcher.outputFormat = getConfigParam(config, ["movie_mode", "output_format"])
 
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            f = os.path.join(root,file)
-            if isFileToBeAddToList(f, ignorePattern):
-                fileList.append(f)
-    
-    return fileList
+    if len(dumpFile) > 0:
+        with open(dumpFile, "r") as readFile:
+            data = json.load(readFile)
+            for d in data:
+                movie = Movie()
+                movie.deserialize(d)
+                matcher.movieData[movie] = None
 
-def parseFolder(config : dict, matcher : EpisodeMatcherTMDb):
+        if not refetch:
+            return matcher
+
+    # No Dump given
+    else:
+        matcher = parseMovieFolder(config, matcher)
+
+    # Fetch
+    for movie in matcher.movieData.keys():
+        matcher.fetchDetails(movie, movie.databaseId)
+    return matcher  
+
+def parseShowFolder(config : dict, matcher : EpisodeMatcherTMDb):
     inDir         = getConfigParam(config, ["tv_show_mode", "input_folder"])
     ignorePattern = getConfigParam(config, ["ignore_pattern"])
-    files         = getFileList(inDir, ignorePattern)   
-    
+    files         = getFileList(inDir, ignorePattern)
+
     matcher.setFiles(files)
-    result = matcher.getDatabaseMatches()
+    possibleMatches = matcher.getDatabaseMatches()
 
     if bool(getConfigParam(config, ["set_auto_id"])):
-        for r in result:
+        for r in possibleMatches:
             r[0].id = r[1][0].id
         return matcher
-    
-    for r in result:
+
+    for r in possibleMatches:
+        print('For Show ' + r[0].estimatedTitle)
         for d in r[1]:
             print("ID: " + str(d.id) + \
                 '\tTitle: ' + d.obj_name + \
                     " (" + str(d.first_air_date[:4]) + ")")
-        
+
         id = -1
         while id == -1:
             print("Enter ID or nothing to acceppt first line, if available")
@@ -126,9 +101,45 @@ def parseFolder(config : dict, matcher : EpisodeMatcherTMDb):
                 id = r[1][0].id
             elif i.isdecimal:
                 id = int(i)
-        
-        r[0].id = id
+
+        r[0].databaseId = id
     return matcher
+
+def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
+    
+    inDir         = getConfigParam(config, ["movie_mode", "input_folder"])
+    ignorePattern = getConfigParam(config, ["ignore_pattern"])
+    files         = getFileList(inDir, ignorePattern)
+    for file in files:
+        file = file.replace('\\', '/')
+
+    matcher.rootFolder = inDir
+    matcher.setFiles(files)
+    possibleMatches = matcher.getDatabaseMatches()
+
+    if bool(getConfigParam(config, ["set_auto_id"])):
+        for r in possibleMatches:
+            r[0].id = r[1][0].id
+        return matcher
+
+    for r in possibleMatches:
+        print('For File: ' + r[0].file.fullNameAndPath)
+        for d in r[1]:
+            if 'release_date' not in d.__dict__.keys():
+                continue
+
+            print("ID: " + str(d.id) + \
+                '\tTitle: ' + d.obj_name + \
+                    " (" + str(d.release_date[:4]) + ")")
+        id = -1
+        while id == -1:
+            print("Enter ID or nothing to acceppt first line, if available")
+            i = input()
+            if len(i) == 0 and len(r[1]) > 0:
+                id = r[1][0].id
+            elif i.isdecimal:
+                id = int(i)
+        r[0].databaseId = id
 
 def main(argv):
 
@@ -161,39 +172,55 @@ def main(argv):
     with open(configFile, "r") as readFile:
             config = json.load(readFile)
 
-    overwrite = bool(getConfigParam(config, ["overwrite_existing"]))
+    overwrite = bool(getConfigParam(config, ["overwrite_files"]))
 
     if len(renameFile) > 0:
         with open(renameFile, "r") as readFile:
             data = json.load(readFile)
             moveFiles(data, overwrite)
             sys.exit(0)
-    
-    showEnabled = bool(getConfigParam(config, ["tv_show_mode" , "enable"]))
-    tmpFolder   = getConfigParam(config, ["tmp_folder"])
-    saveDump    = bool(getConfigParam(config, ["dump_data"]))
-    saveRen     = bool(getConfigParam(config, ["dump_renaming_list"]))
-    autoRename  = bool(getConfigParam(config, ["auto_rename"]))
+
+    showEnabled  = bool(getConfigParam(config, ["tv_show_mode" , "enable"]))
+    movieEnabled = bool(getConfigParam(config, ["movie_mode" , "enable"]))
+    tmpFolder    = getConfigParam(config, ["tmp_folder"])
+    saveDump     = bool(getConfigParam(config, ["dump_data"]))
+    saveRen      = bool(getConfigParam(config, ["dump_renaming_list"]))
+    autoRename   = bool(getConfigParam(config, ["auto_rename"]))
 
     showDump   = None
+    movieDump  = None
+
     if showEnabled:
         showDump   = createShowDump(config, dumpFile)
         showDump.determineRenaming()
-
+    
+    if movieEnabled:
+        movieDump = createMovieDump(config, dumpFile)
+        movieDump.determineRenaming()
 
     if saveDump and showDump != None:
         arr = []
         for show in showDump.tvShows.keys():
             arr.append(show.serialize())
         with open(tmpFolder + "/tv_shows.json", "w") as writeFile:
-            json.dump(arr, writeFile, indent=4)  
+            json.dump(arr, writeFile, indent=4)
+    
+    if saveDump and movieDump != None:
+        arr = []
+        for movie in movieDump.movieData.keys():
+            arr.append(movie.serialize())
+        with open(tmpFolder + "/moviess.json", "w") as writeFile:
+            json.dump(arr, writeFile, indent=4)
 
     if saveRen:
         with open(tmpFolder + "/tv_shows_rename.json", "w") as writeFile:
-            json.dump(showDump.matchedFiles, writeFile, indent=4)    
+            json.dump(showDump.matchedFiles, writeFile, indent=4)
+        with open(tmpFolder + "/moviess_rename.json", "w") as writeFile:
+            json.dump(movieDump.matchedFiles, writeFile, indent=4)
 
     if autoRename:
         moveFiles(showDump.matchedFiles, overwrite)
+        moveFiles(movieDump.matchedFiles, overwrite)
 
     sys.exit(0)
 

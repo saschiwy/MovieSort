@@ -6,8 +6,10 @@ class  FilenameParser():
     '''
 
     splitter = ['.', '-', '_', ' ']
-    ignores  = [ 'german', 'english', '720p', '1080p', '2160p', 'web' , 'x264', 'h265', '',
-                 'proper', 'hdtv', 'xvid', 'french', 'spanish', 'italian']
+    cutter   = [ 'german', 'english', '720p', '1080p', '2160p', 'web' , 'x264', 'h265',
+                 'hdtv', 'xvid', 'french', 'spanish', 'italian', 'h264', 'mkv', 'avi',
+                 'mp4']
+    ignores  = ['']
     
     filepath        = None
     fileName        = None
@@ -37,7 +39,8 @@ class  FilenameParser():
             result = resultNew
         return result
 
-    def parse(self, fullNameAndPath : str):
+    def parse(self, fullNameAndPath : str, rootFolder: str):
+        fullNameAndPath = fullNameAndPath.replace("\\", "/")
         self.fullNameAndPath = fullNameAndPath
         i = fullNameAndPath.rfind('/')
         if i != -1:
@@ -52,11 +55,11 @@ class  FilenameParser():
             self.fileName  = self.fileName[:i]
 
         self.parsedNames = []
-        splitted = self.__splitWords__ (self.fileName)
+        splitted = self.__splitWords__ (self.fullNameAndPath.replace(rootFolder, ''))
         for s in splitted:
             if s.lower() in self.ignores:
                 continue
-            
+
             self.parsedNames.append(s)
         return
     
