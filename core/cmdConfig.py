@@ -19,7 +19,7 @@ CmdConfig = {
     "tmp_folder" : "./tmp/",
     "refetch_data" : False,
     "overwrite_files" : False,
-    "ignore_pattern": ["*.nfo", "*.jpg", "*.htm", "*.html", "*.url", '*.txt', "*.png", "*sample*", "*proof*"]
+    "ignore_pattern": ["*.nfo", "*.jpg", "*.htm", "*.html", "*.url", '*.txt', "*.png", "*sample*", "*proof*", ".DS_Store"]
 }
 
 def getConfigParam(config : dict(), keys : []):

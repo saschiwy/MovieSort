@@ -79,8 +79,8 @@ class MovieMatcherTMDb(MovieMatcher):
     
     def determineRenaming(self):
         self.matchedFiles = []
-        for movie, detail in self.movieData.items():
-            if detail == None:
+        for movie in self.movieData.keys():
+            if movie.databaseTitle == '':
                 continue
 
             target = self.createOutputFile (movie.databaseTitle, 

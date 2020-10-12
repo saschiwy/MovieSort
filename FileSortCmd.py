@@ -140,6 +140,7 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
             elif i.isdecimal:
                 id = int(i)
         r[0].databaseId = id
+    return matcher
 
 def main(argv):
 
@@ -209,17 +210,19 @@ def main(argv):
         arr = []
         for movie in movieDump.movieData.keys():
             arr.append(movie.serialize())
-        with open(tmpFolder + "/moviess.json", "w") as writeFile:
+        with open(tmpFolder + "/movies.json", "w") as writeFile:
             json.dump(arr, writeFile, indent=4)
 
-    if saveRen:
+    if saveRen and showDump != None:
         with open(tmpFolder + "/tv_shows_rename.json", "w") as writeFile:
             json.dump(showDump.matchedFiles, writeFile, indent=4)
-        with open(tmpFolder + "/moviess_rename.json", "w") as writeFile:
+    if saveRen and movieDump != None:
+        with open(tmpFolder + "/movies_rename.json", "w") as writeFile:
             json.dump(movieDump.matchedFiles, writeFile, indent=4)
 
-    if autoRename:
+    if autoRename and showDump != None:
         moveFiles(showDump.matchedFiles, overwrite)
+    if autoRename and movieDump != None:
         moveFiles(movieDump.matchedFiles, overwrite)
 
     sys.exit(0)

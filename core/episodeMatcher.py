@@ -138,8 +138,8 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
     
     def determineRenaming(self):
         self.matchedFiles = []
-        for show, detail in self.tvShows.items():
-            if detail == None:
+        for show in self.tvShows.keys():
+            if show.databaseTitle == '':
                 continue
 
             for sNbr, season in show.seasons.items():
