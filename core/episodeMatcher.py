@@ -1,11 +1,11 @@
-from .tvShow import TvShow
-from .tvShow import Episode
-
 from tmdbv3api import TMDb
 from tmdbv3api import TV
 from tmdbv3api import Season
 
-from .fops import removeDisallowedFilenameChars
+from tvShow import TvShow
+from tvShow import Episode
+
+from fops import removeDisallowedFilenameChars
 
 class EpisodeMatcher():
     
@@ -79,15 +79,7 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
 
     def __init__(self):
         EpisodeMatcher.__init__(self)
-        self.setLanguage('en')
-        self.setApiKey('e24fcd17eff0cfe0064fa7b5cb05b97d')
-
-    def setLanguage (self, lang):
-        TMDb().language = lang
-
-    def setApiKey (self, apiKey):
-        TMDb().api_key  = apiKey
-    
+            
     def getDatabaseMatches(self):
         tv     = TV()
         result = []

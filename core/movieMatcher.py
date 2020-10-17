@@ -1,15 +1,15 @@
 from tmdbv3api import TMDb
 from tmdbv3api import Movie as tmbdMovie
 
-from .fops import removeDisallowedFilenameChars
-from .movie import Movie
+from fops import removeDisallowedFilenameChars
+from movie import Movie
 
 class MovieMatcher():
     
     matchedFiles = None
     files        = None
     movieData    = dict()
-    outputFormat = "./%n (%y)/%n (%y).%x"
+    outputFormat = "./%t (%y)/%t (%y).%x"
     rootFolder   = None
 
     def __init__(self, rootFolder: str):
@@ -54,15 +54,7 @@ class MovieMatcherTMDb(MovieMatcher):
 
     def __init__(self, rootFolder: str):
         MovieMatcher.__init__(self, rootFolder)
-        self.setLanguage('en')
-        self.setApiKey('e24fcd17eff0cfe0064fa7b5cb05b97d')
-
-    def setLanguage (self, lang):
-        TMDb().language = lang
-
-    def setApiKey (self, apiKey):
-        TMDb().api_key  = apiKey
-    
+        
     # Get matches in TMDb for all movies in dict
     def getDatabaseMatches(self):
         result = []

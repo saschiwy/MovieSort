@@ -77,6 +77,7 @@ The command line tool uses a .json file to be configured. An example is shown be
 https://pypi.org/project/tmdbv3api/
 ~~~~
 pip install tmdbv3api
+pip install qtmodern
 ~~~~
 
 ## Contributions

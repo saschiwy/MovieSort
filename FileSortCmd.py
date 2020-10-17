@@ -10,11 +10,13 @@ __email__      = "sascha.schiwy@gmail.com"
 __status__     = "Production"
 
 import sys, getopt, json, os, fnmatch
+sys.path.insert(0, './core')
 
-from core.cmdConfig import getConfigParam
-from core.episodeMatcher import EpisodeMatcherTMDb, TvShow
-from core.movieMatcher import MovieMatcherTMDb, Movie
-from core.fops import getFileList, moveFiles
+from cmdConfig import getConfigParam
+from episodeMatcher import EpisodeMatcherTMDb, TvShow
+from movieMatcher import MovieMatcherTMDb, Movie
+from fops import getFileList, moveFiles
+from tmdbv3api import TMDb
 
 def printHelp():
     print('FileSortCmd -c <ConfigFile> [-d <DumpFile]')
@@ -143,10 +145,9 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
     return matcher
 
 def main(argv):
-
     configFile   = ''
     renameFile   = ''
-    dumpFile   = ''
+    dumpFile     = ''
 
     try:
         opts, args = getopt.getopt(argv,"hc:r:d:",["configfile=", "renamefile", "dumpfile"])
@@ -171,7 +172,10 @@ def main(argv):
 
     config = dict()
     with open(configFile, "r") as readFile:
-            config = json.load(readFile)
+        config = json.load(readFile)
+
+    TMDb().language = getConfigParam(config, 'language')
+    TMDb().api_key  = 'e24fcd17eff0cfe0064fa7b5cb05b97d'
 
     overwrite = bool(getConfigParam(config, ["overwrite_files"]))
 
