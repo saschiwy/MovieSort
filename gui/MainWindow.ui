@@ -64,6 +64,9 @@
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
             </property>
@@ -93,12 +96,12 @@
             </attribute>
             <column>
              <property name="text">
-              <string>Filename</string>
+              <string>Folder</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Folder</string>
+              <string>Filename</string>
              </property>
             </column>
            </widget>
@@ -125,6 +128,9 @@
            <widget class="QTableWidget" name="tableMovieOutput">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
@@ -191,6 +197,9 @@
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
             </property>
@@ -214,12 +223,12 @@
             </attribute>
             <column>
              <property name="text">
-              <string>Filename</string>
+              <string>Folder</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Folder</string>
+              <string>Filename</string>
              </property>
             </column>
            </widget>

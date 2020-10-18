@@ -18,7 +18,7 @@ class Movie():
         self.estimatedTitleFrags = []
         self.databaseTitle       = ''
         self.databaseYear        = 1900
-        self.databaseId          = 0
+        self.databaseId          = -1
         self.estimatedYear       = 1900
     
     def __isYear__(self, string : str):

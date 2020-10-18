@@ -31,7 +31,7 @@ def getFileList(path, ignorePattern):
         for file in files:
             f = os.path.join(root,file)
             if isFileToBeAddToList(f, ignorePattern):
-                fileList.append(f)
+                fileList.append(f.replace('\\', '/'))
     
     return fileList
 

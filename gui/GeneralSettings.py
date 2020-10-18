@@ -42,6 +42,7 @@ class GeneralSettingsWindow(QDialog):
         guiConfig["ignore_pattern"]  = ignores
         guiConfig["overwrite_files"] = self.chkOverwrite.isChecked()
         guiConfig["language"]        = self.txtLang.text()
+        TMDb().language = guiConfig['language']
         guiConfig.saveSettings()
 
     def loadLanguages(self):

@@ -26,7 +26,6 @@ def createShowDump(config : dict(), dumpFile : str):
 
     refetch = bool(getConfigParam(config, ["refetch_data"]))
     matcher = EpisodeMatcherTMDb()
-    matcher.setLanguage(getConfigParam(config, ["language"]))
     matcher.outputFormat = getConfigParam(config, ["tv_show_mode", "output_format"])
 
     if len(dumpFile) > 0:
@@ -52,7 +51,6 @@ def createMovieDump(config : dict(), dumpFile : str):
 
     refetch = bool(getConfigParam(config, ["refetch_data"]))
     matcher = MovieMatcherTMDb('./')
-    matcher.setLanguage(getConfigParam(config, ["language"]))
     matcher.outputFormat = getConfigParam(config, ["movie_mode", "output_format"])
 
     if len(dumpFile) > 0:
@@ -112,11 +110,10 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
     inDir         = getConfigParam(config, ["movie_mode", "input_folder"])
     ignorePattern = getConfigParam(config, ["ignore_pattern"])
     files         = getFileList(inDir, ignorePattern)
-    for file in files:
-        file = file.replace('\\', '/')
-
+   
     matcher.rootFolder = inDir
     matcher.setFiles(files)
+    
     possibleMatches = matcher.getDatabaseMatches()
 
     if bool(getConfigParam(config, ["set_auto_id"])):
