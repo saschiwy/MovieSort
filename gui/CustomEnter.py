@@ -20,6 +20,6 @@ class CustomEnterWindow(QDialog):
 
         if numbersOnly:
             self.txtId.setInputMask("99999999")
-
+            
     def accepted(self):
         self.result = self.txtId.text()

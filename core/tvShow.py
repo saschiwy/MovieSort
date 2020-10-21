@@ -15,8 +15,8 @@ class Episode(Movie):
         self.episodeString       = ''
         self.isShow              = False
     
-    def parse(self, name : str):
-        Movie.parse(self, name)
+    def parse(self, name : str, rootFolder : str):
+        Movie.parse(self, name, rootFolder)
         
         eFrags = self.estimatedTitleFrags
         self.estimatedTitleFrags = []

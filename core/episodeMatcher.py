@@ -14,18 +14,20 @@ class EpisodeMatcher():
     tvShows      = dict()
     showDetails  = None
     outputFormat = "./%n (%y)/Season %0s/%n (%y) - S%0sE%0e - %t.%x"
+    rootFolder   = None
 
-    def __init__(self):
+    def __init__(self, rootFolder: str):
         self.files        = []
         self.tvShows      = dict()
         self.matchedFiles = []
+        self.rootFolder   = ''
 
     def __getShows__ (self, files : []):
         self.tvShows = dict()
         
         for file in files:
             epi = Episode()
-            epi.parse(file)
+            epi.parse(file, self.rootFolder)
             added = False
 
             if not epi.isShow:
@@ -77,8 +79,8 @@ class EpisodeMatcher():
 
 class EpisodeMatcherTMDb(EpisodeMatcher):
 
-    def __init__(self):
-        EpisodeMatcher.__init__(self)
+    def __init__(self, rootFolder: str):
+        EpisodeMatcher.__init__(self, rootFolder)
             
     def getDatabaseMatches(self):
         tv     = TV()
@@ -149,3 +151,12 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
                     
                     episode.file.targetFileName = target
                     self.matchedFiles.append([episode.file.fullNameAndPath, target ])
+
+    def getAllEpisodes(self):
+        result = []
+        for show in self.tvShows.keys():
+            for season in show.seasons.values():
+                for episode in season.episodes:
+                    result.append(episode)
+        
+        return result

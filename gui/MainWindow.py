@@ -1,4 +1,4 @@
-import sys
+import sys, os, shutil
 from os.path import join, dirname, abspath
 
 from qtpy import uic
@@ -11,12 +11,13 @@ import qtmodern.windows
 from MovieSettings import MovieSettingsWindow
 from ShowSettings import ShowSettingsWindow
 from GeneralSettings import GeneralSettingsWindow
-from MovieSelection import MovieSelectionWindow
+from MovieSelection import MovieSelectionWindow, ShowSelectionWindow
 from movieMatcher import MovieMatcherTMDb
 from episodeMatcher import EpisodeMatcherTMDb
 from guiConfig import guiConfig
 from fops import getFileList
 from movie import Movie
+from tvShow import TvShow, Episode
 
 _UI = join(dirname(abspath(__file__)), 'MainWindow.ui')
 
@@ -49,7 +50,8 @@ class MainWindow(QMainWindow):
         self.tableMovieInput.horizontalHeader().setVisible(True)
         self.tableMovieInput.verticalHeader().setVisible(True)
 
-        self.movieMatcher = MovieMatcherTMDb('./')
+        self.movieMatcher    = MovieMatcherTMDb('./')
+        self.episodeMatcher  = EpisodeMatcherTMDb('./')
 
     def update_progress(self, progress):
         self.progressBar.setValue(progress)
@@ -115,24 +117,107 @@ class MainWindow(QMainWindow):
         self.tableMovieOutput.clearContents()
         self.tableMovieInput.setRowCount(0)
         self.tableMovieOutput.setRowCount(0)
+    
+    def clearShows(self):
+        self.episodeMatcher.__init__('./')
+        self.tableShowInput.clearContents()
+        self.tableShowOutput.clearContents()
+        self.tableShowInput.setRowCount(0)
+        self.tableShowOutput.setRowCount(0)
+
+    def moveFiles(self, files : [], overwrite : bool):
+        
+        num = len(files)
+        self.progressBar.setValue(0)
+
+        c=0
+        for source, target in files:
+            pos       = target.rfind("/")
+            targetDir = "./"
+            if pos != -1:
+                targetDir = target[:pos]
+
+            # check if directory exists or not yet
+            if not os.path.exists(targetDir):
+                os.makedirs(targetDir)
+
+            if os.path.isfile(target) and overwrite:
+                os.remove(target)
+
+            if os.path.exists(targetDir):
+                shutil.move(source, target)
+            
+            c += 1
+            self.progressBar.setValue(c * 100 / num)
+            
 
     def moveMovies(self):
-        pass
+        self.moveFiles(self.movieMatcher.matchedFiles, bool(guiConfig['overwrite_files']))
+        self.clearMovies()
 
     def choseShowFolder(self):
         folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        files  = getFileList(folder, guiConfig["ignore_pattern"])
+        
+        self.clearShows()
+        self.episodeMatcher.outputFormat = guiConfig["show_output_format"]
+        self.episodeMatcher.rootFolder   = folder
+        self.episodeMatcher.setFiles(files)
+
+        episodes = self.episodeMatcher.getAllEpisodes()
+        
+        r = 0
+        self.tableShowInput.setRowCount(len(episodes))
+        for episode in episodes:
+            self.tableShowInput.setItem(r, 1, QTableWidgetItem(episode.file.fileName + '.' + episode.file.extension))
+            self.tableShowInput.setItem(r, 0, QTableWidgetItem(episode.file.filepath))
+            r += 1
 
     def matchShows(self):
-        pass
-    
-    def clearShows(self):
-        pass
+        # Get Movie as first param and array with result as second
+        # [Movie, [result 1, result 2, ...]]
+        possibleMatches = self.episodeMatcher.getDatabaseMatches()
+        for show, results in possibleMatches:
+            id = self.openShowSelection(show, results)
+            if id != -1:
+                self.episodeMatcher.fetchDetails(show, id)
+        
+        self.episodeMatcher.determineRenaming()
+        
+        r = 0
+        for show in self.episodeMatcher.tvShows.keys():
+            for season in show.seasons.values():
+                for episode in season.episodes:
+                    self.tableShowOutput.setRowCount(r + 1)
+                    if episode.file.targetFileName != '' and show.databaseTitle != '':
+                        self.tableShowOutput.setItem(r, 0, QTableWidgetItem(show.databaseTitle))
+                        self.tableShowOutput.setItem(r, 1, QTableWidgetItem(show.firstAirYear))
+                        self.tableShowOutput.setItem(r, 2, QTableWidgetItem(str(season.seasonNumber)))
+                        self.tableShowOutput.setItem(r, 3, QTableWidgetItem(str(episode.episodeNumber)))
+                        self.tableShowOutput.setItem(r, 4, QTableWidgetItem(str(episode.databaseTitle)))
+                        self.tableShowOutput.setItem(r, 5, QTableWidgetItem(str(episode.file.targetFileName)))
+                    r += 1
 
     def moveShows(self):
-        pass
+        self.moveFiles(self.episodeMatcher.matchedFiles, bool(guiConfig['overwrite_files']))
+        self.clearShows()
 
     def openMovieSelection(self, movie : Movie(), result : list()):
         select = MovieSelectionWindow(movie.file.fullNameAndPath, result)
+        select.setWindowModality(Qt.WindowModal)
+        mw = qtmodern.windows.ModernWindow(select)
+        mw.setWindowModality(Qt.WindowModal)
+        mw.show()
+
+        # This loop will wait for the window is destroyed
+        loop = QEventLoop()
+        select.finished.connect(loop.quit)
+        loop.exec()
+            
+        return select.acceptedId
+
+    def openShowSelection(self, show : TvShow(), result : list()):
+        select = ShowSelectionWindow(show.estimatedTitle, result)
         select.setWindowModality(Qt.WindowModal)
         mw = qtmodern.windows.ModernWindow(select)
         mw.setWindowModality(Qt.WindowModal)

@@ -14,7 +14,7 @@ _UI = join(dirname(abspath(__file__)), 'ShowSettings.ui')
 
 class ShowSettingsWindow(QDialog):
 
-    __showMatcher__ = EpisodeMatcher()
+    __showMatcher__ = EpisodeMatcher('./')
 
     def __init__(self):
         QDialog.__init__(self)

@@ -10,7 +10,7 @@ import qtmodern.styles
 import qtmodern.windows
 
 from CustomEnter import CustomEnterWindow
-from tmdbv3api import Movie
+from tmdbv3api import Movie, TV
 
 _UI = join(dirname(abspath(__file__)), 'MovieSelection.ui')
 
@@ -65,10 +65,13 @@ class MovieSelectionWindow(QDialog):
     
     def actualizeTable(self):
         self.tablePossibilities.clearContents()
-        self.tablePossibilities.setRowCount(len(self.__possibilities__))
 
         r = 0
         for p in self.__possibilities__:
+            if 'title' not in p.__dict__ or 'release_date' not in p.__dict__:
+                self.__possibilities__.remove(p)
+                continue
+            self.tablePossibilities.setRowCount(r + 1)
             self.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.title))
             self.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.release_date[:4]))
             r += 1
@@ -91,6 +94,7 @@ class MovieSelectionWindow(QDialog):
         mw = qtmodern.windows.ModernWindow(select)
         mw.setWindowModality(Qt.WindowModal)
         mw.show()
+        select.txtId.setFocus()
 
         loop = QEventLoop()
         select.finished.connect(loop.quit)
@@ -100,22 +104,58 @@ class MovieSelectionWindow(QDialog):
             self.acceptedId = int(select.result)
             self.close()
 
-    def enterTitle(self):
+    def __enterTitleWindow__(self, search):
         select = CustomEnterWindow(False)
         select.setWindowModality(Qt.WindowModal)
         mw = qtmodern.windows.ModernWindow(select)
         mw.setWindowModality(Qt.WindowModal)
         mw.show()
+        select.txtId.setFocus()
 
         loop = QEventLoop()
         select.finished.connect(loop.quit)
         loop.exec()
         
         if select.result != None:
-            self.__possibilities__ = Movie().search(select.result)
+            self.__possibilities__ = search(select.result)
             self.actualizeTable()
+
+    def enterTitle(self):
+        self.__enterTitleWindow__(Movie().search)
 
     def accept(self):
         self.acceptedId = self.__possibilities__[self.tablePossibilities.currentRow()].id
         self.close()
 
+class ShowSelectionWindow(MovieSelectionWindow):
+    def __init__(self, showTitle, possibilities):
+        MovieSelectionWindow.__init__(self, showTitle, possibilities)
+
+    def enterTitle(self):
+        self.__enterTitleWindow__(TV().search)
+
+    
+    def actualizeTable(self):
+        self.tablePossibilities.clearContents()
+        r = 0
+        for p in self.__possibilities__:
+            if 'first_air_date' not in p.__dict__ or 'name' not in p.__dict__:
+                self.__possibilities__.remove(p)
+                continue
+            print(p.__dict__)
+            self.tablePossibilities.setRowCount(r + 1)
+            self.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.name))
+            self.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.first_air_date[:4]))
+            r += 1
+        
+        self.tablePossibilities.clearSelection()
+
+    def selectionChanged(self, row, column):
+        self.txtOverview.clear()
+        self.txtOverview.appendPlainText(self.__possibilities__[row].overview)
+        self.lblTitle.setText(self.__possibilities__[row].name + ' (' + 
+            self.__possibilities__[row].first_air_date[:4] + ')')
+        if self.__possibilities__[row].poster_path != None:
+            self.showImage(self.__possibilities__[row].poster_path)
+        else:
+            self.removeImage()
