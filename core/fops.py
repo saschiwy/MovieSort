@@ -37,6 +37,16 @@ def getFileList(path, ignorePattern):
 
 validFilenameChars = ":-_.()/ %s%s" % (string.ascii_letters, string.digits)
 
+def removeAllExceptFirst(s : str,substr : str):
+    try:
+        first_occurrence = s.index(substr) + len(substr)
+    except ValueError:
+        pass
+    else:
+        s = s[:first_occurrence] + s[first_occurrence:].replace(substr, "")
+    return s
+
 def removeDisallowedFilenameChars(filename):
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('utf-8')
-    return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+    cleanedFilename = ''.join(c for c in cleanedFilename if c in validFilenameChars)
+    return removeAllExceptFirst(cleanedFilename, ":")
