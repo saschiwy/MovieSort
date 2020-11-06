@@ -1,10 +1,10 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JBK73YUVW7MGW&source=url)
 
-# FileSort
+# MovieSort
 Still under deployment, neither the software nor the documentation is finished yet.
 
 ## Summary
-FileSort is a tool to automatically move video and tv-show files. Therefore, it uses [The Movie Database](https://www.themoviedb.org/) to fetch the movie data online. The software is written in Python.
+MovieSort is a tool to automatically move video and tv-show files. Therefore, it uses [The Movie Database](https://www.themoviedb.org/) to fetch the movie data online. The software is written in Python.
 
 ## Features
 - Parse filenames in a defined folder and subfolders
@@ -45,7 +45,7 @@ T.B.D
 |%x    | File Extension                            |
 
  ## Command Line Tool
- Beside the GUI the project contains a command line tool version of FilesSort. It can be used on a headless system like a download server or to automatize tasks.
+ Beside the GUI the project contains a command line tool version of MovieSort. It can be used on a headless system like a download server or to automatize tasks.
 
 The command line tool uses a .json file to be configured. An example is shown below.
 

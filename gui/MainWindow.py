@@ -1,7 +1,8 @@
 import sys, os, shutil
 from os.path import join, dirname, abspath
+import webbrowser
 
-from qtpy import uic
+#from qtpy import uic
 from qtpy.QtCore import Slot, Signal, Qt, QEventLoop
 from qtpy.QtWidgets import QApplication, QMainWindow, QMessageBox, QTreeWidgetItem, QTableWidget, QHeaderView, QFileDialog, QTableWidgetItem
 
@@ -18,43 +19,47 @@ from guiConfig import guiConfig
 from fops import getFileList
 from movie import Movie
 from tvShow import TvShow, Episode
+from Ui_MainWindow import Ui_MainWindow
 
-_UI = join(dirname(abspath(__file__)), 'MainWindow.ui')
+#_UI = join(dirname(abspath(__file__)), 'MainWindow.ui')
 
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        uic.loadUi(_UI, self)  # Load the ui into self
+        #uic.loadUi(_UI, self)  # Load the ui into self
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
-        self.actionLight.triggered.connect(self.lightTheme)
-        self.actionDark.triggered.connect(self.darkTheme)
-        self.actionMovie_Settings.triggered.connect(self.openMovieSettings)
-        self.actionShow_Settings.triggered.connect(self.openShowSettings)
-        self.actionGeneral_Settings.triggered.connect(self.openGeneralSettings)
-        self.actionExit.triggered.connect(self.close)
-        self.btnMovieChoseFolder.clicked.connect(self.choseMovieFolder)
-        self.btnMovieMatch.clicked.connect(self.matchMovies)
-        self.btnMovieClear.clicked.connect(self.clearMovies)
-        self.btnMovieMove.clicked.connect(self.moveMovies)
-        self.btnShowChoseFolder.clicked.connect(self.choseShowFolder)
-        self.btnShowMatch.clicked.connect(self.matchShows)
-        self.btnShowClear.clicked.connect(self.clearShows)
-        self.btnShowMove.clicked.connect(self.moveShows)
+        self.ui.actionLight.triggered.connect(self.lightTheme)
+        self.ui.actionDark.triggered.connect(self.darkTheme)
+        self.ui.actionMovie_Settings.triggered.connect(self.openMovieSettings)
+        self.ui.actionShow_Settings.triggered.connect(self.openShowSettings)
+        self.ui.actionGeneral_Settings.triggered.connect(self.openGeneralSettings)
+        self.ui.actionExit.triggered.connect(self.close)
+        self.ui.actionDonate.triggered.connect(self.donate)
+        self.ui.btnMovieChoseFolder.clicked.connect(self.choseMovieFolder)
+        self.ui.btnMovieMatch.clicked.connect(self.matchMovies)
+        self.ui.btnMovieClear.clicked.connect(self.clearMovies)
+        self.ui.btnMovieMove.clicked.connect(self.moveMovies)
+        self.ui.btnShowChoseFolder.clicked.connect(self.choseShowFolder)
+        self.ui.btnShowMatch.clicked.connect(self.matchShows)
+        self.ui.btnShowClear.clicked.connect(self.clearShows)
+        self.ui.btnShowMove.clicked.connect(self.moveShows)
 
-        self.tableShowOutput.horizontalHeader().setVisible(True)
-        self.tableShowOutput.verticalHeader().setVisible(True)
-        self.tableShowInput.horizontalHeader().setVisible(True)
-        self.tableShowInput.verticalHeader().setVisible(True)
-        self.tableMovieOutput.horizontalHeader().setVisible(True)
-        self.tableMovieOutput.verticalHeader().setVisible(True)
-        self.tableMovieInput.horizontalHeader().setVisible(True)
-        self.tableMovieInput.verticalHeader().setVisible(True)
+        self.ui.tableShowOutput.horizontalHeader().setVisible(True)
+        self.ui.tableShowOutput.verticalHeader().setVisible(True)
+        self.ui.tableShowInput.horizontalHeader().setVisible(True)
+        self.ui.tableShowInput.verticalHeader().setVisible(True)
+        self.ui.tableMovieOutput.horizontalHeader().setVisible(True)
+        self.ui.tableMovieOutput.verticalHeader().setVisible(True)
+        self.ui.tableMovieInput.horizontalHeader().setVisible(True)
+        self.ui.tableMovieInput.verticalHeader().setVisible(True)
 
         self.movieMatcher    = MovieMatcherTMDb('./')
         self.episodeMatcher  = EpisodeMatcherTMDb('./')
 
     def update_progress(self, progress):
-        self.progressBar.setValue(progress)
+        self.ui.progressBar.setValue(progress)
 
     def lightTheme(self):
         qtmodern.styles.light(QApplication.instance())
@@ -84,10 +89,10 @@ class MainWindow(QMainWindow):
         self.movieMatcher.setFiles(files)
 
         r = 0
-        self.tableMovieInput.setRowCount(len(self.movieMatcher.movieData.keys()))
+        self.ui.tableMovieInput.setRowCount(len(self.movieMatcher.movieData.keys()))
         for movie in self.movieMatcher.movieData.keys():
-            self.tableMovieInput.setItem(r, 1, QTableWidgetItem(movie.file.fileName + '.' + movie.file.extension))
-            self.tableMovieInput.setItem(r, 0, QTableWidgetItem(movie.file.filepath))
+            self.ui.tableMovieInput.setItem(r, 1, QTableWidgetItem(movie.file.fileName + '.' + movie.file.extension))
+            self.ui.tableMovieInput.setItem(r, 0, QTableWidgetItem(movie.file.filepath))
             r += 1
 
     def matchMovies(self):
@@ -102,33 +107,33 @@ class MainWindow(QMainWindow):
         self.movieMatcher.determineRenaming()
         
         r = 0
-        self.tableMovieOutput.clearContents()
-        self.tableMovieOutput.setRowCount(len(self.movieMatcher.movieData.keys()))
+        self.ui.tableMovieOutput.clearContents()
+        self.ui.tableMovieOutput.setRowCount(len(self.movieMatcher.movieData.keys()))
         for movie in self.movieMatcher.movieData.keys():
             if movie.databaseId != -1:
-                self.tableMovieOutput.setItem(r, 0, QTableWidgetItem(movie.databaseTitle))
-                self.tableMovieOutput.setItem(r, 1, QTableWidgetItem(str(movie.databaseYear)))
-                self.tableMovieOutput.setItem(r, 2, QTableWidgetItem(movie.file.targetFileName))
+                self.ui.tableMovieOutput.setItem(r, 0, QTableWidgetItem(movie.databaseTitle))
+                self.ui.tableMovieOutput.setItem(r, 1, QTableWidgetItem(str(movie.databaseYear)))
+                self.ui.tableMovieOutput.setItem(r, 2, QTableWidgetItem(movie.file.targetFileName))
             r += 1
     
     def clearMovies(self):
         self.movieMatcher.__init__('./')
-        self.tableMovieInput.clearContents()
-        self.tableMovieOutput.clearContents()
-        self.tableMovieInput.setRowCount(0)
-        self.tableMovieOutput.setRowCount(0)
+        self.ui.tableMovieInput.clearContents()
+        self.ui.tableMovieOutput.clearContents()
+        self.ui.tableMovieInput.setRowCount(0)
+        self.ui.tableMovieOutput.setRowCount(0)
     
     def clearShows(self):
         self.episodeMatcher.__init__('./')
-        self.tableShowInput.clearContents()
-        self.tableShowOutput.clearContents()
-        self.tableShowInput.setRowCount(0)
-        self.tableShowOutput.setRowCount(0)
+        self.ui.tableShowInput.clearContents()
+        self.ui.tableShowOutput.clearContents()
+        self.ui.tableShowInput.setRowCount(0)
+        self.ui.tableShowOutput.setRowCount(0)
 
     def moveFiles(self, files : [], overwrite : bool):
         
         num = len(files)
-        self.progressBar.setValue(0)
+        self.ui.progressBar.setValue(0)
 
         c=0
         for source, target in files:
@@ -148,7 +153,7 @@ class MainWindow(QMainWindow):
                 shutil.move(source, target)
             
             c += 1
-            self.progressBar.setValue(c * 100 / num)
+            self.ui.progressBar.setValue(c * 100 / num)
             
 
     def moveMovies(self):
@@ -167,10 +172,10 @@ class MainWindow(QMainWindow):
         episodes = self.episodeMatcher.getAllEpisodes()
         
         r = 0
-        self.tableShowInput.setRowCount(len(episodes))
+        self.ui.tableShowInput.setRowCount(len(episodes))
         for episode in episodes:
-            self.tableShowInput.setItem(r, 1, QTableWidgetItem(episode.file.fileName + '.' + episode.file.extension))
-            self.tableShowInput.setItem(r, 0, QTableWidgetItem(episode.file.filepath))
+            self.ui.tableShowInput.setItem(r, 1, QTableWidgetItem(episode.file.fileName + '.' + episode.file.extension))
+            self.ui.tableShowInput.setItem(r, 0, QTableWidgetItem(episode.file.filepath))
             r += 1
 
     def matchShows(self):
@@ -188,14 +193,14 @@ class MainWindow(QMainWindow):
         for show in self.episodeMatcher.tvShows.keys():
             for season in show.seasons.values():
                 for episode in season.episodes:
-                    self.tableShowOutput.setRowCount(r + 1)
+                    self.ui.tableShowOutput.setRowCount(r + 1)
                     if episode.file.targetFileName != '' and show.databaseTitle != '':
-                        self.tableShowOutput.setItem(r, 0, QTableWidgetItem(show.databaseTitle))
-                        self.tableShowOutput.setItem(r, 1, QTableWidgetItem(show.firstAirYear))
-                        self.tableShowOutput.setItem(r, 2, QTableWidgetItem(str(season.seasonNumber)))
-                        self.tableShowOutput.setItem(r, 3, QTableWidgetItem(str(episode.episodeNumber)))
-                        self.tableShowOutput.setItem(r, 4, QTableWidgetItem(str(episode.databaseTitle)))
-                        self.tableShowOutput.setItem(r, 5, QTableWidgetItem(str(episode.file.targetFileName)))
+                        self.ui.tableShowOutput.setItem(r, 0, QTableWidgetItem(show.databaseTitle))
+                        self.ui.tableShowOutput.setItem(r, 1, QTableWidgetItem(show.firstAirYear))
+                        self.ui.tableShowOutput.setItem(r, 2, QTableWidgetItem(str(season.seasonNumber)))
+                        self.ui.tableShowOutput.setItem(r, 3, QTableWidgetItem(str(episode.episodeNumber)))
+                        self.ui.tableShowOutput.setItem(r, 4, QTableWidgetItem(str(episode.databaseTitle)))
+                        self.ui.tableShowOutput.setItem(r, 5, QTableWidgetItem(str(episode.file.targetFileName)))
                     r += 1
 
     def moveShows(self):
@@ -229,3 +234,6 @@ class MainWindow(QMainWindow):
         loop.exec()
             
         return select.acceptedId
+    
+    def donate(self):
+        webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JBK73YUVW7MGW&source=url', new = 2)

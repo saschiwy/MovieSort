@@ -129,6 +129,13 @@
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Information by The Movie Database (tmdb.org)</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

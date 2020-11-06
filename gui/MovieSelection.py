@@ -1,7 +1,7 @@
 import sys, os, json, requests
 from os.path import join, dirname, abspath
 
-from qtpy import uic, QtGui
+from qtpy import QtGui
 from qtpy.QtCore import Slot, QThread, Signal, Qt, QEventLoop
 from qtpy.QtWidgets import QApplication, QDialog, QListWidgetItem, QGraphicsPixmapItem, QGraphicsScene, QGraphicsView, QTableWidgetItem
 from qtpy.QtGui import QPixmap
@@ -11,8 +11,7 @@ import qtmodern.windows
 
 from CustomEnter import CustomEnterWindow
 from tmdbv3api import Movie, TV
-
-_UI = join(dirname(abspath(__file__)), 'MovieSelection.ui')
+from Ui_MovieSelection import Ui_Dialog as Ui_MovieSelection
 
 class MovieSelectionWindow(QDialog):
     
@@ -24,16 +23,18 @@ class MovieSelectionWindow(QDialog):
     def __init__(self, oFile, possibilities):
         self.acceptedId = -1
         QDialog.__init__(self)
-        uic.loadUi(_UI, self)
+        
+        self.ui = Ui_MovieSelection()
+        self.ui.setupUi(self)
+        
+        self.ui.btnEnterId.clicked.connect(self.enterId)
+        self.ui.btnEnterTitle.clicked.connect(self.enterTitle)
+        self.ui.btnAccept.clicked.connect(self.accept)
 
-        self.btnEnterId.clicked.connect(self.enterId)
-        self.btnEnterTitle.clicked.connect(self.enterTitle)
-        self.btnAccept.clicked.connect(self.accept)
-
-        self.tablePossibilities.horizontalHeader().setVisible(True)
-        self.tablePossibilities.verticalHeader().setVisible(True)
-        self.tablePossibilities.cellClicked.connect(self.selectionChanged)
-        self.lblOriginalFile.setText(oFile)
+        self.ui.tablePossibilities.horizontalHeader().setVisible(True)
+        self.ui.tablePossibilities.verticalHeader().setVisible(True)
+        self.ui.tablePossibilities.cellClicked.connect(self.selectionChanged)
+        self.ui.lblOriginalFile.setText(oFile)
 
         self.__possibilities__ = possibilities
         self.actualizeTable()
@@ -46,7 +47,7 @@ class MovieSelectionWindow(QDialog):
         item = QGraphicsPixmapItem(pix)
         self.__scene__ = QGraphicsScene(self)
         self.__scene__.addItem(item)
-        self.graphicsView.setScene(self.__scene__)
+        self.ui.graphicsView.setScene(self.__scene__)
         self.resizeImage()
     
     def removeImage(self):
@@ -60,28 +61,28 @@ class MovieSelectionWindow(QDialog):
     
     def resizeImage(self):
         if(self.__scene__ != None):
-            self.graphicsView.fitInView(self.__scene__.sceneRect(), mode=Qt.KeepAspectRatio)
-            self.graphicsView.show()
+            self.ui.graphicsView.fitInView(self.__scene__.sceneRect(), mode=Qt.KeepAspectRatio)
+            self.ui.graphicsView.show()
     
     def actualizeTable(self):
-        self.tablePossibilities.clearContents()
+        self.ui.tablePossibilities.clearContents()
 
         r = 0
         for p in self.__possibilities__:
             if 'title' not in p.__dict__ or 'release_date' not in p.__dict__:
                 self.__possibilities__.remove(p)
                 continue
-            self.tablePossibilities.setRowCount(r + 1)
-            self.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.title))
-            self.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.release_date[:4]))
+            self.ui.tablePossibilities.setRowCount(r + 1)
+            self.ui.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.title))
+            self.ui.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.release_date[:4]))
             r += 1
         
-        self.tablePossibilities.clearSelection()
+        self.ui.tablePossibilities.clearSelection()
     
     def selectionChanged(self, row, column):
-        self.txtOverview.clear()
-        self.txtOverview.appendPlainText(self.__possibilities__[row].overview)
-        self.lblTitle.setText(self.__possibilities__[row].title + ' (' + 
+        self.ui.txtOverview.clear()
+        self.ui.txtOverview.appendPlainText(self.__possibilities__[row].overview)
+        self.ui.lblTitle.setText(self.__possibilities__[row].title + ' (' + 
             self.__possibilities__[row].release_date[:4] + ')')
         if self.__possibilities__[row].poster_path != None:
             self.showImage(self.__possibilities__[row].poster_path)
@@ -94,7 +95,7 @@ class MovieSelectionWindow(QDialog):
         mw = qtmodern.windows.ModernWindow(select)
         mw.setWindowModality(Qt.WindowModal)
         mw.show()
-        select.txtId.setFocus()
+        select.ui.txtId.setFocus()
 
         loop = QEventLoop()
         select.finished.connect(loop.quit)
@@ -110,7 +111,7 @@ class MovieSelectionWindow(QDialog):
         mw = qtmodern.windows.ModernWindow(select)
         mw.setWindowModality(Qt.WindowModal)
         mw.show()
-        select.txtId.setFocus()
+        select.ui.txtId.setFocus()
 
         loop = QEventLoop()
         select.finished.connect(loop.quit)
@@ -124,7 +125,7 @@ class MovieSelectionWindow(QDialog):
         self.__enterTitleWindow__(Movie().search)
 
     def accept(self):
-        self.acceptedId = self.__possibilities__[self.tablePossibilities.currentRow()].id
+        self.acceptedId = self.__possibilities__[self.ui.tablePossibilities.currentRow()].id
         self.close()
 
 class ShowSelectionWindow(MovieSelectionWindow):
@@ -136,24 +137,24 @@ class ShowSelectionWindow(MovieSelectionWindow):
 
     
     def actualizeTable(self):
-        self.tablePossibilities.clearContents()
+        self.ui.tablePossibilities.clearContents()
         r = 0
         for p in self.__possibilities__:
             if 'first_air_date' not in p.__dict__ or 'name' not in p.__dict__:
                 self.__possibilities__.remove(p)
                 continue
             print(p.__dict__)
-            self.tablePossibilities.setRowCount(r + 1)
-            self.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.name))
-            self.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.first_air_date[:4]))
+            self.ui.tablePossibilities.setRowCount(r + 1)
+            self.ui.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.name))
+            self.ui.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.first_air_date[:4]))
             r += 1
         
-        self.tablePossibilities.clearSelection()
+        self.ui.tablePossibilities.clearSelection()
 
     def selectionChanged(self, row, column):
-        self.txtOverview.clear()
-        self.txtOverview.appendPlainText(self.__possibilities__[row].overview)
-        self.lblTitle.setText(self.__possibilities__[row].name + ' (' + 
+        self.ui.txtOverview.clear()
+        self.ui.txtOverview.appendPlainText(self.__possibilities__[row].overview)
+        self.ui.lblTitle.setText(self.__possibilities__[row].name + ' (' + 
             self.__possibilities__[row].first_air_date[:4] + ')')
         if self.__possibilities__[row].poster_path != None:
             self.showImage(self.__possibilities__[row].poster_path)

@@ -1,7 +1,6 @@
 import sys
 from os.path import join, dirname, abspath
 
-from qtpy import uic
 from qtpy.QtCore import Slot, QThread, Signal
 from qtpy.QtWidgets import QApplication, QDialog
 
@@ -10,7 +9,7 @@ import qtmodern.windows
 
 from episodeMatcher import EpisodeMatcher
 from guiConfig import guiConfig
-_UI = join(dirname(abspath(__file__)), 'ShowSettings.ui')
+from Ui_ShowSettings import Ui_Dialog as Ui_ShowSettings
 
 class ShowSettingsWindow(QDialog):
 
@@ -18,15 +17,18 @@ class ShowSettingsWindow(QDialog):
 
     def __init__(self):
         QDialog.__init__(self)
-        uic.loadUi(_UI, self)  # Load the ui into self    
+
+        self.ui = Ui_ShowSettings()
+        self.ui.setupUi(self)
+
         self.actualizePreview()
-        self.txtMSOutFormat.textChanged[str].connect(self.actualizePreview)
-        self.txtMSOutFormat.setText(guiConfig['show_output_format'])
-        self.buttonBox.accepted.connect(self.accepted)
+        self.ui.txtMSOutFormat.textChanged[str].connect(self.actualizePreview)
+        self.ui.txtMSOutFormat.setText(guiConfig['show_output_format'])
+        self.ui.buttonBox.accepted.connect(self.accepted)
 
     def actualizePreview(self):
-        self.__showMatcher__.outputFormat = self.txtMSOutFormat.text()
-        self.txtMSPreview.setText(
+        self.__showMatcher__.outputFormat = self.ui.txtMSOutFormat.text()
+        self.ui.txtMSPreview.setText(
             self.__showMatcher__.createOutputFile(
                 showName = 'The Boys', 
                 episodeTitle = 'We Gotta Go Now',
@@ -36,5 +38,5 @@ class ShowSettingsWindow(QDialog):
                 extension = 'mp4'))
     
     def accepted(self):
-        guiConfig['show_output_format'] = self.txtMSOutFormat.text()
+        guiConfig['show_output_format'] = self.ui.txtMSOutFormat.text()
         guiConfig.saveSettings()

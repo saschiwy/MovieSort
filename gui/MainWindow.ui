@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>FileSort</string>
+   <string>MovieSort</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0" columnstretch="0">
@@ -69,6 +69,9 @@
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <property name="rowCount">
              <number>0</number>
@@ -134,6 +137,9 @@
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <property name="rowCount">
              <number>0</number>
@@ -203,6 +209,9 @@
             <property name="alternatingRowColors">
              <bool>true</bool>
             </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
             <property name="rowCount">
              <number>0</number>
             </property>
@@ -261,6 +270,9 @@
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <property name="wordWrap">
              <bool>false</bool>
@@ -357,8 +369,9 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>FileSort</string>
+     <string>MovieSort</string>
     </property>
+    <addaction name="actionDonate"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
@@ -391,9 +404,9 @@
     <string>Dark</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="actionDonate">
    <property name="text">
-    <string>Exit</string>
+    <string>Donate</string>
    </property>
   </action>
   <action name="actionGeneral_Settings">
@@ -414,6 +427,11 @@
   <action name="actionShow_Settings">
    <property name="text">
     <string>Show Settings</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
