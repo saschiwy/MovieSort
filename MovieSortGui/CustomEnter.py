@@ -1,12 +1,5 @@
-import sys
-from os.path import join, dirname, abspath
-
-from qtpy.QtCore import Slot, QThread, Signal
-from qtpy.QtWidgets import QApplication, QDialog
-
-import qtmodern.styles
-import qtmodern.windows
-from Ui_CustomEnter import Ui_SetId
+from qtpy.QtWidgets import QDialog
+from .Ui_CustomEnter import Ui_SetId
 
 class CustomEnterWindow(QDialog):
 

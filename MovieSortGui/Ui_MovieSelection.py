@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\_Prj\FileSort\gui/MovieSelection.ui'
+# Form implementation generated from reading ui file 'C:\_Prj\FileSort\MovieSortGui/MovieSelection.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.1
 #
@@ -11,15 +11,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.setWindowModality(QtCore.Qt.WindowModal)
-        Dialog.resize(1403, 828)
-        Dialog.setSizeGripEnabled(True)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+class Ui_MovieSelection(object):
+    def setupUi(self, MovieSelection):
+        MovieSelection.setObjectName("MovieSelection")
+        MovieSelection.setWindowModality(QtCore.Qt.WindowModal)
+        MovieSelection.resize(1403, 828)
+        MovieSelection.setSizeGripEnabled(True)
+        self.verticalLayout = QtWidgets.QVBoxLayout(MovieSelection)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.lblOriginalFile = QtWidgets.QLabel(Dialog)
+        self.lblOriginalFile = QtWidgets.QLabel(MovieSelection)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.lblOriginalFile.setFont(font)
@@ -28,7 +28,7 @@ class Ui_Dialog(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.groupBox = QtWidgets.QGroupBox(Dialog)
+        self.groupBox = QtWidgets.QGroupBox(MovieSelection)
         self.groupBox.setTitle("")
         self.groupBox.setFlat(False)
         self.groupBox.setObjectName("groupBox")
@@ -54,7 +54,7 @@ class Ui_Dialog(object):
         self.btnEnterTitle.setObjectName("btnEnterTitle")
         self.gridLayout_2.addWidget(self.btnEnterTitle, 1, 1, 1, 1)
         self.horizontalLayout.addWidget(self.groupBox)
-        self.groupBox_2 = QtWidgets.QGroupBox(Dialog)
+        self.groupBox_2 = QtWidgets.QGroupBox(MovieSelection)
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
         self.gridLayout = QtWidgets.QGridLayout(self.groupBox_2)
@@ -79,23 +79,23 @@ class Ui_Dialog(object):
         self.horizontalLayout.setStretch(0, 3)
         self.horizontalLayout.setStretch(1, 5)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.label = QtWidgets.QLabel(Dialog)
+        self.label = QtWidgets.QLabel(MovieSelection)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(MovieSelection)
+        QtCore.QMetaObject.connectSlotsByName(MovieSelection)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, MovieSelection):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Select"))
-        self.lblOriginalFile.setText(_translate("Dialog", "Original File"))
+        MovieSelection.setWindowTitle(_translate("MovieSelection", "Select"))
+        self.lblOriginalFile.setText(_translate("MovieSelection", "Original File"))
         item = self.tablePossibilities.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "Title"))
+        item.setText(_translate("MovieSelection", "Title"))
         item = self.tablePossibilities.horizontalHeaderItem(1)
-        item.setText(_translate("Dialog", "Year"))
-        self.btnEnterId.setText(_translate("Dialog", "Enter ID"))
-        self.btnEnterTitle.setText(_translate("Dialog", "Enter Title"))
-        self.btnAccept.setText(_translate("Dialog", "Accept"))
-        self.lblTitle.setText(_translate("Dialog", "Title"))
-        self.label.setText(_translate("Dialog", "Information by The Movie Database (tmdb.org)"))
+        item.setText(_translate("MovieSelection", "Year"))
+        self.btnEnterId.setText(_translate("MovieSelection", "Enter ID"))
+        self.btnEnterTitle.setText(_translate("MovieSelection", "Enter Title"))
+        self.btnAccept.setText(_translate("MovieSelection", "Accept"))
+        self.lblTitle.setText(_translate("MovieSelection", "Title"))
+        self.label.setText(_translate("MovieSelection", "Information by The Movie Database (tmdb.org)"))

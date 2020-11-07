@@ -2,10 +2,10 @@ from tmdbv3api import TMDb
 from tmdbv3api import TV
 from tmdbv3api import Season
 
-from tvShow import TvShow
-from tvShow import Episode
+from .tvShow import TvShow
+from .tvShow import Episode
 
-from fops import removeDisallowedFilenameChars
+from .fops import removeDisallowedFilenameChars
 
 class EpisodeMatcher():
     
@@ -20,7 +20,7 @@ class EpisodeMatcher():
         self.files        = []
         self.tvShows      = dict()
         self.matchedFiles = []
-        self.rootFolder   = ''
+        self.rootFolder   = rootFolder
 
     def __getShows__ (self, files : []):
         self.tvShows = dict()

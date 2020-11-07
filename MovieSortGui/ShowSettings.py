@@ -1,5 +1,4 @@
 import sys
-from os.path import join, dirname, abspath
 
 from qtpy.QtCore import Slot, QThread, Signal
 from qtpy.QtWidgets import QApplication, QDialog
@@ -7,9 +6,9 @@ from qtpy.QtWidgets import QApplication, QDialog
 import qtmodern.styles
 import qtmodern.windows
 
-from episodeMatcher import EpisodeMatcher
-from guiConfig import guiConfig
-from Ui_ShowSettings import Ui_Dialog as Ui_ShowSettings
+from MovieSortCore import EpisodeMatcher
+from .guiConfig import guiConfig
+from .Ui_ShowSettings import Ui_ShowSettings
 
 class ShowSettingsWindow(QDialog):
 

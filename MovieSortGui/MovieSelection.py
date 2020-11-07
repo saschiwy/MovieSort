@@ -1,5 +1,4 @@
 import sys, os, json, requests
-from os.path import join, dirname, abspath
 
 from qtpy import QtGui
 from qtpy.QtCore import Slot, QThread, Signal, Qt, QEventLoop
@@ -9,9 +8,11 @@ from qtpy.QtGui import QPixmap
 import qtmodern.styles
 import qtmodern.windows
 
-from CustomEnter import CustomEnterWindow
 from tmdbv3api import Movie, TV
-from Ui_MovieSelection import Ui_Dialog as Ui_MovieSelection
+
+
+from .CustomEnter import CustomEnterWindow
+from .Ui_MovieSelection import Ui_MovieSelection
 
 class MovieSelectionWindow(QDialog):
     

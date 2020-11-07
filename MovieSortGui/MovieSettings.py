@@ -1,6 +1,4 @@
 import sys
-from time import sleep
-from os.path import join, dirname, abspath
 
 from qtpy.QtCore import Slot, QThread, Signal
 from qtpy.QtWidgets import QApplication, QDialog
@@ -8,9 +6,10 @@ from qtpy.QtWidgets import QApplication, QDialog
 import qtmodern.styles
 import qtmodern.windows
 
-from movieMatcher import MovieMatcher
-from guiConfig import guiConfig
-from Ui_MovieSettings import Ui_Dialog as Ui_MovieSettings
+from MovieSortCore import MovieMatcher
+
+from .guiConfig import guiConfig
+from .Ui_MovieSettings import Ui_MovieSettings
 
 class MovieSettingsWindow(QDialog):
 

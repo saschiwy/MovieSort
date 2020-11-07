@@ -25,7 +25,7 @@ And more...
 - Cleanup the code
 
 ## Reason for the Project
-I wanted to learn python, since I like to have a usage of a project I decided to create a software to rename file in an automatized way. I like the capabilities of [FileBot](https://www.filebot.net/), and decided to create something like a clone. However, I want to keep the sources and usage free for anyone and licenced it under GPL.
+I wanted to learn python, since I like to have a usage of a project I decided to create a software to rename file in an automatized way. I like the capabilities of [FileBot](https://www.filebot.net/), and decided to create something like a clone. However, I want to keep the sources and usage free for anyone and licensed it under GPL.
 
 ## Graphical User Interface
 T.B.D 
@@ -74,10 +74,12 @@ The command line tool uses a .json file to be configured. An example is shown be
 ~~~~
 
 ## Development Requirements
-https://pypi.org/project/tmdbv3api/
+
 ~~~~
 pip install tmdbv3api
 pip install qtmodern
+pip install qtpy
+pip install pyqt5
 ~~~~
 
 ## Contributions
@@ -86,3 +88,5 @@ Feel free to send pull requests, use git-flow-workflow.
 ## Credits
 - [Anthony Bloomer](https://github.com/AnthonyBloomer)
 - [The Movie Database](https://www.themoviedb.org/)
+- [QtPy: Abstraction layer](https://github.com/spyder-ide/qtpy)
+- [QtModern](https://github.com/gmarull/qtmodern)

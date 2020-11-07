@@ -1,5 +1,4 @@
 import sys, os, shutil
-from os.path import join, dirname, abspath
 import webbrowser
 
 #from qtpy import uic
@@ -9,24 +8,19 @@ from qtpy.QtWidgets import QApplication, QMainWindow, QMessageBox, QTreeWidgetIt
 import qtmodern.styles
 import qtmodern.windows
 
-from MovieSettings import MovieSettingsWindow
-from ShowSettings import ShowSettingsWindow
-from GeneralSettings import GeneralSettingsWindow
-from MovieSelection import MovieSelectionWindow, ShowSelectionWindow
-from movieMatcher import MovieMatcherTMDb
-from episodeMatcher import EpisodeMatcherTMDb
-from guiConfig import guiConfig
-from fops import getFileList
-from movie import Movie
-from tvShow import TvShow, Episode
-from Ui_MainWindow import Ui_MainWindow
+from MovieSortCore import MovieMatcherTMDb, EpisodeMatcherTMDb, getFileList, Movie, TvShow, Episode
 
-#_UI = join(dirname(abspath(__file__)), 'MainWindow.ui')
+from .MovieSettings import MovieSettingsWindow
+from .ShowSettings import ShowSettingsWindow
+from .GeneralSettings import GeneralSettingsWindow
+from .MovieSelection import MovieSelectionWindow, ShowSelectionWindow
+from .guiConfig import guiConfig
+from .Ui_MainWindow import Ui_MainWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        #uic.loadUi(_UI, self)  # Load the ui into self
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 

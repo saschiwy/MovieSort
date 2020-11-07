@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\_Prj\FileSort\gui/GeneralSettings.ui'
+# Form implementation generated from reading ui file 'C:\_Prj\FileSort\MovieSortGui/GeneralSettings.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.1
 #
@@ -11,14 +11,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(655, 757)
-        Dialog.setSizeGripEnabled(True)
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(Dialog)
+class Ui_GerneralSettings(object):
+    def setupUi(self, GerneralSettings):
+        GerneralSettings.setObjectName("GerneralSettings")
+        GerneralSettings.resize(655, 757)
+        GerneralSettings.setSizeGripEnabled(True)
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(GerneralSettings)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.groupBox = QtWidgets.QGroupBox(Dialog)
+        self.groupBox = QtWidgets.QGroupBox(GerneralSettings)
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -36,7 +36,7 @@ class Ui_Dialog(object):
         self.horizontalLayout.setStretch(2, 1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.verticalLayout_4.addWidget(self.groupBox)
-        self.groupBox_2 = QtWidgets.QGroupBox(Dialog)
+        self.groupBox_2 = QtWidgets.QGroupBox(GerneralSettings)
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_2)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
@@ -62,24 +62,24 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.btnIgnoreRemove, 1, 1, 1, 1)
         self.verticalLayout_3.addWidget(self.groupBox_3)
         self.verticalLayout_4.addWidget(self.groupBox_2)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
+        self.buttonBox = QtWidgets.QDialogButtonBox(GerneralSettings)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout_4.addWidget(self.buttonBox)
 
-        self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(GerneralSettings)
+        self.buttonBox.accepted.connect(GerneralSettings.accept)
+        self.buttonBox.rejected.connect(GerneralSettings.reject)
+        QtCore.QMetaObject.connectSlotsByName(GerneralSettings)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, GerneralSettings):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "General Settings"))
-        self.groupBox.setTitle(_translate("Dialog", "Database Settings"))
-        self.label.setText(_translate("Dialog", "Database Language:"))
-        self.groupBox_2.setTitle(_translate("Dialog", "File Settings"))
-        self.chkOverwrite.setText(_translate("Dialog", "Overwrite files"))
-        self.groupBox_3.setTitle(_translate("Dialog", "Ignore Files"))
-        self.btnIgnoreAdd.setText(_translate("Dialog", "Add"))
-        self.btnIgnoreRemove.setText(_translate("Dialog", "Remove"))
+        GerneralSettings.setWindowTitle(_translate("GerneralSettings", "General Settings"))
+        self.groupBox.setTitle(_translate("GerneralSettings", "Database Settings"))
+        self.label.setText(_translate("GerneralSettings", "Database Language:"))
+        self.groupBox_2.setTitle(_translate("GerneralSettings", "File Settings"))
+        self.chkOverwrite.setText(_translate("GerneralSettings", "Overwrite files"))
+        self.groupBox_3.setTitle(_translate("GerneralSettings", "Ignore Files"))
+        self.btnIgnoreAdd.setText(_translate("GerneralSettings", "Add"))
+        self.btnIgnoreRemove.setText(_translate("GerneralSettings", "Remove"))

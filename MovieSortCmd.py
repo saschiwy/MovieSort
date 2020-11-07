@@ -2,7 +2,7 @@
 
 __author__     = "Sascha Schiwy"
 __copyright__  = "Copyright 2020, Sascha Schiwy"
-__credits__    = ["Anthony Bloomer", "The Movie Database"]
+__credits__    = []
 __license__    = "GPLv2"
 __version__    = "0.0.1"
 __maintainer__ = "Sascha Schiwy"
@@ -10,22 +10,25 @@ __email__      = "sascha.schiwy@gmail.com"
 __status__     = "Production"
 
 import sys, getopt, json, os, fnmatch
-sys.path.insert(0, './core')
 
-from cmdConfig import getConfigParam
-from episodeMatcher import EpisodeMatcherTMDb, TvShow
-from movieMatcher import MovieMatcherTMDb, Movie
-from fops import getFileList, moveFiles
+from MovieSortCore import EpisodeMatcherTMDb, \
+                          getConfigParam, \
+                          TvShow, \
+                          Movie, \
+                          MovieMatcherTMDb, \
+                          getFileList, \
+                          moveFiles
+
 from tmdbv3api import TMDb
 
 def printHelp():
-    print('FileSortCmd -c <ConfigFile> [-d <DumpFile]')
-    print('FileSortCmd -c <ConfigFile> -r <RenameFile>')
+    print('MovieSortCmd -c <ConfigFile> [-d <DumpFile]')
+    print('MovieSortCmd -c <ConfigFile> -r <RenameFile>')
 
 def createShowDump(config : dict(), dumpFile : str):
 
     refetch = bool(getConfigParam(config, ["refetch_data"]))
-    matcher = EpisodeMatcherTMDb()
+    matcher = EpisodeMatcherTMDb(getConfigParam(config, ["tv_show_mode", "input_folder"]))
     matcher.outputFormat = getConfigParam(config, ["tv_show_mode", "output_format"])
 
     if len(dumpFile) > 0:
@@ -50,7 +53,7 @@ def createShowDump(config : dict(), dumpFile : str):
 def createMovieDump(config : dict(), dumpFile : str):
 
     refetch = bool(getConfigParam(config, ["refetch_data"]))
-    matcher = MovieMatcherTMDb('./')
+    matcher = MovieMatcherTMDb(getConfigParam(config, ["movie_mode", "input_folder"]))
     matcher.outputFormat = getConfigParam(config, ["movie_mode", "output_format"])
 
     if len(dumpFile) > 0:
@@ -89,13 +92,16 @@ def parseShowFolder(config : dict, matcher : EpisodeMatcherTMDb):
     for r in possibleMatches:
         print('For Show ' + r[0].estimatedTitle)
         for d in r[1]:
+            if 'first_air_date' not in d.__dict__:
+                continue
+
             print("ID: " + str(d.id) + \
                 '\tTitle: ' + d.obj_name + \
                     " (" + str(d.first_air_date[:4]) + ")")
 
         id = -1
         while id == -1:
-            print("Enter ID or nothing to acceppt first line, if available")
+            print("Enter ID or nothing to accept first line, if available")
             i = input()
             if len(i) == 0 and len(r[1]) > 0:
                 id = r[1][0].id
@@ -132,7 +138,7 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
                     " (" + str(d.release_date[:4]) + ")")
         id = -1
         while id == -1:
-            print("Enter ID or nothing to acceppt first line, if available")
+            print("Enter ID or nothing to accept first line, if available")
             i = input()
             if len(i) == 0 and len(r[1]) > 0:
                 id = r[1][0].id
@@ -171,7 +177,7 @@ def main(argv):
     with open(configFile, "r") as readFile:
         config = json.load(readFile)
 
-    TMDb().language = getConfigParam(config, 'language')
+    TMDb().language = getConfigParam(config, ['language'])
     TMDb().api_key  = 'e24fcd17eff0cfe0064fa7b5cb05b97d'
 
     overwrite = bool(getConfigParam(config, ["overwrite_files"]))

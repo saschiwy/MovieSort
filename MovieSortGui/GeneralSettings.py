@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, json
 from time import sleep
 from os.path import join, dirname, abspath
 
@@ -9,8 +9,8 @@ from tmdbv3api.tmdb import TMDb
 import qtmodern.styles
 import qtmodern.windows
 
-from guiConfig import guiConfig, settingFolder
-from Ui_GeneralSettings import Ui_Dialog as Ui_Settings
+from .guiConfig import guiConfig, settingFolder
+from .Ui_GeneralSettings import Ui_GerneralSettings as Ui_Settings
 
 class GeneralSettingsWindow(QDialog):
 

@@ -133,3 +133,4 @@ tmp/
 .idea
 .vscode
 tmpDebug.py
+/.vs

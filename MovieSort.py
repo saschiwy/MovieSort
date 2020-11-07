@@ -1,12 +1,21 @@
+#!/usr/bin/env python
+
+__author__     = "Sascha Schiwy"
+__copyright__  = "Copyright 2020, Sascha Schiwy"
+__credits__    = []
+__license__    = "GPLv2"
+__version__    = "0.0.1"
+__maintainer__ = "Sascha Schiwy"
+__email__      = "sascha.schiwy@gmail.com"
+__status__     = "Alpha"
+
 import sys
-sys.path.insert(0, './core')
-sys.path.insert(0, './gui')
+sys.path.insert(0, './MovieSortCore')
 
 from tmdbv3api import TMDb
 
 from qtpy.QtWidgets import QApplication
-from MainWindow import MainWindow
-from guiConfig import guiConfig
+from MovieSortGui import MainWindow, guiConfig
 
 import qtmodern.styles
 import qtmodern.windows

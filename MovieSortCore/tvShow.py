@@ -1,5 +1,5 @@
-from filenameParser import FilenameParser
-from movie import Movie
+from .filenameParser import FilenameParser
+from .movie import Movie
 
 class Episode(Movie):
     

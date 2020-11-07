@@ -1,6 +1,5 @@
-
 import datetime
-from filenameParser import FilenameParser
+from .filenameParser import FilenameParser
 
 class Movie():
     

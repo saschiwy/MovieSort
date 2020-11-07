@@ -1,8 +1,8 @@
 from tmdbv3api import TMDb
 from tmdbv3api import Movie as tmbdMovie
 
-from fops import removeDisallowedFilenameChars
-from movie import Movie
+from .fops import removeDisallowedFilenameChars
+from .movie import Movie
 
 class MovieMatcher():
     
