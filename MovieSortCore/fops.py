@@ -15,7 +15,6 @@ def moveFiles(files : [], overwrite : bool):
             os.remove(target)
 
         if os.path.exists(targetDir):
-            print ('move ' + source + ' target' + target)
             shutil.move(source, target)
 
 def isFileToBeAddToList(file, ignorePattern):

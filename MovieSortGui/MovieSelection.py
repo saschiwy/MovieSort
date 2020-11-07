@@ -144,7 +144,6 @@ class ShowSelectionWindow(MovieSelectionWindow):
             if 'first_air_date' not in p.__dict__ or 'name' not in p.__dict__:
                 self.__possibilities__.remove(p)
                 continue
-            print(p.__dict__)
             self.ui.tablePossibilities.setRowCount(r + 1)
             self.ui.tablePossibilities.setItem(r, 0, QTableWidgetItem(p.name))
             self.ui.tablePossibilities.setItem(r, 1, QTableWidgetItem(p.first_air_date[:4]))

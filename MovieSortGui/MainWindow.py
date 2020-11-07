@@ -190,7 +190,7 @@ class MainWindow(QMainWindow):
                     self.ui.tableShowOutput.setRowCount(r + 1)
                     if episode.file.targetFileName != '' and show.databaseTitle != '':
                         self.ui.tableShowOutput.setItem(r, 0, QTableWidgetItem(show.databaseTitle))
-                        self.ui.tableShowOutput.setItem(r, 1, QTableWidgetItem(show.firstAirYear))
+                        self.ui.tableShowOutput.setItem(r, 1, QTableWidgetItem(str(show.firstAirYear)))
                         self.ui.tableShowOutput.setItem(r, 2, QTableWidgetItem(str(season.seasonNumber)))
                         self.ui.tableShowOutput.setItem(r, 3, QTableWidgetItem(str(episode.episodeNumber)))
                         self.ui.tableShowOutput.setItem(r, 4, QTableWidgetItem(str(episode.databaseTitle)))

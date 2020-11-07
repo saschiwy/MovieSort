@@ -9,7 +9,7 @@ MovieSort is a tool to automatically move video and tv-show files. Therefore, it
 ## Features
 - Parse filenames in a defined folder and subfolders
 - Obtain information from TMDb about parsed files
-- Accept the tools pruposal or enter the show ID by your own
+- Accept the tools proposal or enter the show ID by your own
 - Create dumps of matched data and give the possibilty to customize the output
 - Move the matched files
 - Custom renaming pattern
