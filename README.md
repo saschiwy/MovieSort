@@ -1,36 +1,54 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JBK73YUVW7MGW&source=url)
 
 # MovieSort
-Still under deployment, neither the software nor the documentation is finished yet.
+A first Alpha version is available for Linux and Windows under https://github.com/saschiwy/MovieSort/releases 
+
+- [MovieSort](#moviesort)
+  - [Summary](#summary)
+    - [Some Impressions](#some-impressions)
+  - [Features](#features)
+  - [Reason for the Project](#reason-for-the-project)
+  - [Output format](#output-format)
+    - [Tv Show format](#tv-show-format)
+    - [Movie Format](#movie-format)
+  - [Command Line Tool](#command-line-tool)
+  - [Development Requirements](#development-requirements)
+  - [Contributions](#contributions)
+  - [Credits](#credits)
 
 ## Summary
 MovieSort is a tool to automatically move video and tv-show files. Therefore, it uses [The Movie Database](https://www.themoviedb.org/) to fetch the movie data online. The software is written in Python.
 
+### Some Impressions
+![MainWindow](res/pics/01_mainWindows.png)
+
+![Selection](res/pics/02_Select.png)
+
+![ShowSettings](res/pics/03_ShowSettings.png)
+
+![MainWindow](res/pics/04_GeneralSettings.png)
+
 ## Features
 - Parse filenames in a defined folder and subfolders
 - Obtain information from TMDb about parsed files
-- Accept the tools proposal or enter the show ID by your own
-- Create dumps of matched data and give the possibilty to customize the output
+- Accept the tools proposal or enter the movie/show ID by your own
+- Enter own title if filename is to cryptic
+- Create dumps of matched data and give the possibility to customize the output
 - Move the matched files
 - Custom renaming pattern
 - Ignore specified pattern in filenames like, e.g. *.nfo
+- Automatic subtitle inclusion if available in 'subs' or 'subtitles' folder
+- Preview of the possible movies or shows
 
 And more...
-
-
-## Missing Features
-- Movie Mode is not implemented yet
-- GUI not started
-- Document the code
-- Cleanup the code
 
 ## Reason for the Project
 I wanted to learn python, since I like to have a usage of a project I decided to create a software to rename file in an automatized way. I like the capabilities of [FileBot](https://www.filebot.net/), and decided to create something like a clone. However, I want to keep the sources and usage free for anyone and licensed it under GPL.
 
-## Graphical User Interface
-T.B.D 
 
-### Output format
+
+## Output format
+### Tv Show format
 |Symbol| Replacement                               |
 |------|-------------------------------------------|
 |%n    | Show Name                                 |
@@ -44,8 +62,15 @@ T.B.D
 |%y    | First Air Year                            |
 |%x    | File Extension                            |
 
+### Movie Format
+|Symbol| Replacement                               |
+|------|-------------------------------------------|
+|%t    | Movie Title                               |
+|%y    | Year                                      |
+|%x    | File Extension                            |
+
  ## Command Line Tool
- Beside the GUI the project contains a command line tool version of MovieSort. It can be used on a headless system like a download server or to automatize tasks.
+ Beside the GUI the project contains a command line tool version of MovieSort, called MovieSortCmd. It can be used on a headless system like a download server or to automatize tasks.
 
 The command line tool uses a .json file to be configured. An example is shown below.
 
@@ -59,18 +84,23 @@ The command line tool uses a .json file to be configured. An example is shown be
     "movie_mode":{
         "output_format" : "%t (%y)/%t (%y).%x",
         "input_folder" : "./",
-        "enable": false
+        "enable": true
     },
     "language" : "en",
     "dump_data" : true, 
-    "dump_renaming_list" : true,
-    "auto_rename" : false,
+    "auto_rename" : true,
     "set_auto_id": false,
     "tmp_folder" : "./tmp/",
     "refetch_data" : false,
-    "overwrite_existing" : false,
+    "overwrite_existing" : true,
     "ignore_pattern": ["*.nfo", "*.jpg", "*.htm", "*.html", '*.txt', "*.png", "*sample*"]
 }
+~~~~
+
+Save the content to a file, replace the input and output folder and also the format if you like. Then start the tool by:
+
+~~~~
+./MovieSortCmd -c <yourFile>
 ~~~~
 
 ## Development Requirements
