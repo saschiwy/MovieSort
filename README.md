@@ -20,13 +20,13 @@ A first Alpha version is available for Linux and Windows under https://github.co
 MovieSort is a tool to automatically move video and tv-show files. Therefore, it uses [The Movie Database](https://www.themoviedb.org/) to fetch the movie data online. The software is written in Python.
 
 ### Some Impressions
-![MainWindow](res/pics/01_mainWindows.png?raw=true "MainWindow")
+![MainWindow](res/pics/01_mainWindows.PNG)
 
-![Selection](res/pics/02_Select.png?raw=true "Selection")
+![Selection](res/pics/02_Select.PNG)
 
-![ShowSettings](res/pics/03_ShowSettings.png?raw=true "ShowSettings")
+![ShowSettings](res/pics/03_ShowSettings.PNG)
 
-![GeneralSettings](res/pics/04_GeneralSettings.png?raw=true "GeneralSettings")
+![GeneralSettings](res/pics/04_GeneralSettings.PNG)
 
 ## Features
 - Parse filenames in a defined folder and subfolders
