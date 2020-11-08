@@ -1,4 +1,4 @@
-import sys, json
+import sys, json, os
 from time import sleep
 from os.path import join, dirname, abspath
 
@@ -53,6 +53,7 @@ class GeneralSettingsWindow(QDialog):
                 langs = json.load(readFile)
         except:
             langs = TMDb()._call("/configuration/languages", "")
+            os.makedirs(settingFolder)
             with open(self.__langFile__, "w") as writeFile:
                 json.dump(langs, writeFile, indent=4)
 
