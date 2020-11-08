@@ -17,13 +17,12 @@ from MovieSortCore import EpisodeMatcherTMDb, \
                           Movie, \
                           MovieMatcherTMDb, \
                           getFileList, \
-                          moveFiles
+                          Subtitle
 
 from tmdbv3api import TMDb
 
 def printHelp():
     print('MovieSortCmd -c <ConfigFile> [-d <DumpFile]')
-    print('MovieSortCmd -c <ConfigFile> -r <RenameFile>')
 
 def createShowDump(config : dict(), dumpFile : str):
 
@@ -79,7 +78,7 @@ def createMovieDump(config : dict(), dumpFile : str):
 def parseShowFolder(config : dict, matcher : EpisodeMatcherTMDb):
     inDir         = getConfigParam(config, ["tv_show_mode", "input_folder"])
     ignorePattern = getConfigParam(config, ["ignore_pattern"])
-    files         = getFileList(inDir, ignorePattern)
+    files         = getFileList(inDir, ignorePattern + Subtitle().formats)
 
     matcher.setFiles(files)
     possibleMatches = matcher.getDatabaseMatches()
@@ -115,7 +114,7 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
     
     inDir         = getConfigParam(config, ["movie_mode", "input_folder"])
     ignorePattern = getConfigParam(config, ["ignore_pattern"])
-    files         = getFileList(inDir, ignorePattern)
+    files         = getFileList(inDir, ignorePattern + Subtitle().formats)
    
     matcher.rootFolder = inDir
     matcher.setFiles(files)
@@ -149,11 +148,10 @@ def parseMovieFolder(config: dict(), matcher = MovieMatcherTMDb):
 
 def main(argv):
     configFile   = ''
-    renameFile   = ''
     dumpFile     = ''
 
     try:
-        opts, args = getopt.getopt(argv,"hc:r:d:",["configfile=", "renamefile", "dumpfile"])
+        opts, args = getopt.getopt(argv,"hc:d:",["configfile=", "dumpfile"])
     except getopt.GetoptError:
         printHelp()
         sys.exit(2)
@@ -166,10 +164,8 @@ def main(argv):
             configFile = arg
         elif opt in ("-d", "--dumpfile"):
             dumpFile = arg
-        elif opt in ("-r", "--renamefile"):
-            renameFile = arg
 
-    if configFile == '' and renameFile == '':
+    if configFile == '':
         printHelp()
         sys.exit(0)
 
@@ -182,17 +178,10 @@ def main(argv):
 
     overwrite = bool(getConfigParam(config, ["overwrite_files"]))
 
-    if len(renameFile) > 0:
-        with open(renameFile, "r") as readFile:
-            data = json.load(readFile)
-            moveFiles(data, overwrite)
-            sys.exit(0)
-
     showEnabled  = bool(getConfigParam(config, ["tv_show_mode" , "enable"]))
     movieEnabled = bool(getConfigParam(config, ["movie_mode" , "enable"]))
     tmpFolder    = getConfigParam(config, ["tmp_folder"])
     saveDump     = bool(getConfigParam(config, ["dump_data"]))
-    saveRen      = bool(getConfigParam(config, ["dump_renaming_list"]))
     autoRename   = bool(getConfigParam(config, ["auto_rename"]))
 
     showDump   = None
@@ -220,17 +209,10 @@ def main(argv):
         with open(tmpFolder + "/movies.json", "w") as writeFile:
             json.dump(arr, writeFile, indent=4)
 
-    if saveRen and showDump != None:
-        with open(tmpFolder + "/tv_shows_rename.json", "w") as writeFile:
-            json.dump(showDump.matchedFiles, writeFile, indent=4)
-    if saveRen and movieDump != None:
-        with open(tmpFolder + "/movies_rename.json", "w") as writeFile:
-            json.dump(movieDump.matchedFiles, writeFile, indent=4)
-
     if autoRename and showDump != None:
-        moveFiles(showDump.matchedFiles, overwrite)
+        showDump.moveFiles(overwrite)
     if autoRename and movieDump != None:
-        moveFiles(movieDump.matchedFiles, overwrite)
+        movieDump.moveFiles(overwrite)
 
     sys.exit(0)
 

@@ -8,7 +8,7 @@ from qtpy.QtWidgets import QApplication, QMainWindow, QMessageBox, QTreeWidgetIt
 import qtmodern.styles
 import qtmodern.windows
 
-from MovieSortCore import MovieMatcherTMDb, EpisodeMatcherTMDb, getFileList, Movie, TvShow, Episode
+from MovieSortCore import MovieMatcherTMDb, EpisodeMatcherTMDb, getFileList, Movie, TvShow, Episode, Subtitle
 
 from .MovieSettings import MovieSettingsWindow
 from .ShowSettings import ShowSettingsWindow
@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
     
     def choseMovieFolder(self):
         folder  = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        files   = getFileList(folder, guiConfig["ignore_pattern"])
+        files   = getFileList(folder, guiConfig["ignore_pattern"] + Subtitle().formats)
         
         self.clearMovies()
         self.movieMatcher.outputFormat = guiConfig["movie_output_format"]
@@ -124,34 +124,21 @@ class MainWindow(QMainWindow):
         self.ui.tableShowInput.setRowCount(0)
         self.ui.tableShowOutput.setRowCount(0)
 
-    def moveFiles(self, files : [], overwrite : bool):
+    def moveFiles(self, movies : [], overwrite : bool):
         
-        num = len(files)
+        num = len(movies)
         self.ui.progressBar.setValue(0)
 
         c=0
-        for source, target in files:
-            pos       = target.rfind("/")
-            targetDir = "./"
-            if pos != -1:
-                targetDir = target[:pos]
+        for movie in movies:
+            movie.move(overwrite)
 
-            # check if directory exists or not yet
-            if not os.path.exists(targetDir):
-                os.makedirs(targetDir)
-
-            if os.path.isfile(target) and overwrite:
-                os.remove(target)
-
-            if os.path.exists(targetDir):
-                shutil.move(source, target)
-            
             c += 1
             self.ui.progressBar.setValue(c * 100 / num)
             
 
     def moveMovies(self):
-        self.moveFiles(self.movieMatcher.matchedFiles, bool(guiConfig['overwrite_files']))
+        self.moveFiles(self.movieMatcher.movieData.keys(), bool(guiConfig['overwrite_files']))
         self.clearMovies()
 
     def choseShowFolder(self):
@@ -198,7 +185,7 @@ class MainWindow(QMainWindow):
                     r += 1
 
     def moveShows(self):
-        self.moveFiles(self.episodeMatcher.matchedFiles, bool(guiConfig['overwrite_files']))
+        self.moveFiles(self.episodeMatcher.getAllEpisodes(), bool(guiConfig['overwrite_files']))
         self.clearShows()
 
     def openMovieSelection(self, movie : Movie(), result : list()):

@@ -9,7 +9,6 @@ from .fops import removeDisallowedFilenameChars
 
 class EpisodeMatcher():
     
-    matchedFiles = None
     files        = None
     tvShows      = dict()
     showDetails  = None
@@ -19,7 +18,6 @@ class EpisodeMatcher():
     def __init__(self, rootFolder: str):
         self.files        = []
         self.tvShows      = dict()
-        self.matchedFiles = []
         self.rootFolder   = rootFolder
 
     def __getShows__ (self, files : []):
@@ -46,6 +44,12 @@ class EpisodeMatcher():
     def setFiles(self, files : []):
         self.__getShows__(files)
         self.files = files
+
+    def moveFiles(self, overwrite : bool):
+        for show in self.tvShows.keys():
+            for season in show.seasons.values():
+                for episode in season.episodes:
+                    episode.move(overwrite)
 
     # Allowed special Character
     # %n   - Show Name
@@ -131,7 +135,6 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
         return False
     
     def determineRenaming(self):
-        self.matchedFiles = []
         for show in self.tvShows.keys():
             if show.databaseTitle == '':
                 continue
@@ -147,10 +150,7 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
                                     show.firstAirYear,
                                     episode.file.extension)
                     
-                    target = removeDisallowedFilenameChars(target)
-                    
-                    episode.file.targetFileName = target
-                    self.matchedFiles.append([episode.file.fullNameAndPath, target ])
+                    episode.setTarget(removeDisallowedFilenameChars(target))
 
     def getAllEpisodes(self):
         result = []

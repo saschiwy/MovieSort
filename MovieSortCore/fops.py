@@ -1,22 +1,20 @@
 import os, fnmatch, sys, shutil, string, unicodedata
 
-def moveFiles(files : [], overwrite : bool):
-    for source, target in files:
-        pos       = target.rfind("/")
-        targetDir = "./"
-        if pos != -1:
-            targetDir = target[:pos]
+def moveFile(source : str, target : str, overwrite : bool):
+    pos       = target.rfind("/")
+    targetDir = "./"
+    if pos != -1:
+        targetDir = target[:pos]
+    # check if directory exists or not yet
+    if not os.path.exists(targetDir):
+        os.makedirs(targetDir)
+
+    if os.path.isfile(target) and overwrite:
+        os.remove(target)
+
+    if os.path.exists(targetDir):
+        shutil.move(source, target)
         
-        # check if directory exists or not yet
-        if not os.path.exists(targetDir):
-            os.makedirs(targetDir)
-
-        if os.path.isfile(target) and overwrite:
-            os.remove(target)
-
-        if os.path.exists(targetDir):
-            shutil.move(source, target)
-
 def isFileToBeAddToList(file, ignorePattern):
     for x in ignorePattern:
         if fnmatch.fnmatch(file, x):

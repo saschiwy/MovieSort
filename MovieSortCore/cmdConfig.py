@@ -13,7 +13,6 @@ CmdConfig = {
 
     "language" : "en",
     "dump_data" : True, 
-    "dump_renaming_list" : True,
     "auto_rename" : True,
     "set_auto_id": False,
     "tmp_folder" : "./tmp/",

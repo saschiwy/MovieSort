@@ -6,7 +6,6 @@ from .movie import Movie
 
 class MovieMatcher():
     
-    matchedFiles = None
     files        = None
     movieData    = dict()
     outputFormat = "./%t (%y)/%t (%y).%x"
@@ -15,7 +14,6 @@ class MovieMatcher():
     def __init__(self, rootFolder: str):
         self.files        = []
         self.movieData    = dict()
-        self.matchedFiles = []
         self.rootFolder   = rootFolder
     
     def __parseMovies__(self):
@@ -49,6 +47,10 @@ class MovieMatcher():
             searchArray  = searchArray[:len(searchArray) - 1]
             result = searchObj.search(searchString)
         return result
+    
+    def moveFiles(self, overwrite : bool):
+        for movie in self.movieData.keys():
+            movie.move(overwrite)
 
 class MovieMatcherTMDb(MovieMatcher):
 
@@ -70,7 +72,6 @@ class MovieMatcherTMDb(MovieMatcher):
         self.movieData[movie] = details
     
     def determineRenaming(self):
-        self.matchedFiles = []
         for movie in self.movieData.keys():
             if movie.databaseTitle == '':
                 continue
@@ -79,6 +80,4 @@ class MovieMatcherTMDb(MovieMatcher):
                     movie.databaseYear,
                     movie.file.extension)
 
-            target = removeDisallowedFilenameChars(target)
-            movie.file.targetFileName = target
-            self.matchedFiles.append([movie.file.fullNameAndPath, target ])
+            movie.setTarget(removeDisallowedFilenameChars(target))

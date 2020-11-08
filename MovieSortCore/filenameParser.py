@@ -5,7 +5,7 @@ class  FilenameParser():
     class also ignores some words which are known as not useful
     '''
 
-    splitter = ['.', '-', '_', ' ']
+    splitter = ['.', '-', '_', ' ', '/']
     cutter   = [ 'german', 'english', '720p', '1080p', '2160p', 'web' , 'x264', 'h265',
                  'hdtv', 'xvid', 'french', 'spanish', 'italian', 'h264', 'mkv', 'avi',
                  'mp4']
