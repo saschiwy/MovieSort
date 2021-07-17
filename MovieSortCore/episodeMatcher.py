@@ -105,7 +105,7 @@ class EpisodeMatcherTMDb(EpisodeMatcher):
         self.tvShows[show] = details
         show.firstAirYear  = int(details.first_air_date[:4])
         show.databaseId    = id
-        show.databaseTitle = details.obj_name
+        show.databaseTitle = details.name
 
         # Fetch episode information
         for sNbr, season in show.seasons.items():

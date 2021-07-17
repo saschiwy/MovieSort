@@ -13,8 +13,10 @@ def moveFile(source : str, target : str, overwrite : bool):
         os.remove(target)
 
     if os.path.exists(targetDir):
-        shutil.move(source, target)
-        
+        try:
+            shutil.move(source, target)
+        except : None
+
 def isFileToBeAddToList(file, ignorePattern):
     for x in ignorePattern:
         if fnmatch.fnmatch(file, x):

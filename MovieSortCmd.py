@@ -95,7 +95,7 @@ def parseShowFolder(config : dict, matcher : EpisodeMatcherTMDb):
                 continue
 
             print("ID: " + str(d.id) + \
-                '\tTitle: ' + d.obj_name + \
+                '\tTitle: ' + d.name + \
                     " (" + str(d.first_air_date[:4]) + ")")
 
         id = -1
@@ -199,6 +199,9 @@ def main(argv):
         arr = []
         for show in showDump.tvShows.keys():
             arr.append(show.serialize())
+        
+        if not os.path.exists(tmpFolder):
+            os.makedirs(tmpFolder)
         with open(tmpFolder + "/tv_shows.json", "w") as writeFile:
             json.dump(arr, writeFile, indent=4)
     
