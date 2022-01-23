@@ -33,6 +33,17 @@ class Episode(Movie):
                 self.estimatedTitleFrags.append(s)
         
         self.estimatedTitle = ' '.join(self.estimatedTitleFrags)
+
+        if not self.isShow:
+            for s in self.file.parsedNames:
+                result = self.file.parseSeasonAndEpisode(s)
+                if result[0]:
+                    self.isShow        = True
+                    self.seasonNumber  = result[1]
+                    self.episodeNumber = result[2]
+                    self.episodeString = result[3]
+                    break
+
     
     def serialize(self):
         j = Movie.serialize(self)
