@@ -1,7 +1,8 @@
 import os, subprocess
 
 scriptpath  = os.path.dirname(os.path.realpath(__file__))
-pyinstaller = 'C:/Users/Sascha/AppData/Local/Programs/Python/Python37/Scripts/pyinstaller.exe'
+pyinstaller = "C:/_Entwicklung/Anaconda3/Scripts/pyinstaller.exe"
+
 
 cmd = pyinstaller + ' --clean --add-binary ' + scriptpath + '/qtmodern*' + os.pathsep + 'qtmodern ' \
     + '--distpath ' + scriptpath + '/dist ' \
