@@ -67,8 +67,10 @@ class MovieMatcherTMDb(MovieMatcher):
     def fetchDetails(self, movie : Movie, id):
         details = tmbdMovie().details(id)
         movie.databaseTitle   = details.title
-        if 'release_date' in details.__dict__:
+        if 'release_date' in details.__dict__ and len(details.release_date) >= 4:
             movie.databaseYear    = int(details.release_date[:4])
+        else:
+            movie.databaseYear    = 0
         movie.databaseId      = id
         self.movieData[movie] = details
     
