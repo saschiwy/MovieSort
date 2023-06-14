@@ -110,6 +110,8 @@ pip install tmdbv3api
 pip install qtmodern
 pip install qtpy
 pip install pyqt5
+
+apt-get install libgl1
 ~~~~
 
 ## Contributions

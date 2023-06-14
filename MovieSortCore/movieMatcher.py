@@ -45,7 +45,7 @@ class MovieMatcher():
         while len(result) == 0 and len(searchArray) > 0:
             searchString = ' '.join(searchArray)
             searchArray  = searchArray[:len(searchArray) - 1]
-            result = searchObj.search(searchString)
+            result = searchObj.search(searchString, adult=True)
         return result
     
     def moveFiles(self, overwrite : bool):

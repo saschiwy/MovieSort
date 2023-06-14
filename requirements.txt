@@ -1,0 +1,4 @@
+qtmodern==0.2.0
+qtpy==1.9.0
+pyqt5==5.15.4
+git+https://github.com/Impre-visible/tmdbv3api.git

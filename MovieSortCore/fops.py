@@ -9,6 +9,9 @@ def moveFile(source : str, target : str, overwrite : bool):
     if not os.path.exists(targetDir):
         os.makedirs(targetDir)
 
+    # remove all non file characters from target
+    target = removeDisallowedFilenameChars(target)
+
     if os.path.isfile(target) and overwrite:
         os.remove(target)
 
@@ -48,4 +51,9 @@ def removeAllExceptFirst(s : str,substr : str):
 def removeDisallowedFilenameChars(filename):
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('utf-8')
     cleanedFilename = ''.join(c for c in cleanedFilename if c in validFilenameChars)
-    return removeAllExceptFirst(cleanedFilename, ":")
+
+    # if system is windows, remove all : except the first one
+    if sys.platform == "win32":
+        return removeAllExceptFirst(cleanedFilename, ":")
+    else:
+        return cleanedFilename.replace(":", "")

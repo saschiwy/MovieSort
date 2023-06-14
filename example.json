@@ -1,0 +1,37 @@
+{
+  "tv_show_mode": {
+    "output_format": "/mnt/d/test/serien/%n (%y)/Season %0s/%n (%y) - S%0sE%0e - %t.%x",
+    "input_folder": "/mnt/d/test_d/serien/",
+    "enable": true
+  },
+  "movie_mode": {
+    "output_format": "/mnt/d/test/filme/%t (%y)/%t (%y).%x",
+    "input_folder": "/mnt/d/test_d/movies/",
+    "enable": true
+  },
+  "language": "de",
+  "dump_data": false,
+  "auto_rename": true,
+  "set_auto_id": false,
+  "tmp_folder": "/mnt/d/test_tmp/",
+  "refetch_data": true,
+  "overwrite_files": true,
+  "ignore_pattern": [
+    "*.nfo",
+    "*.jpg",
+    "*.htm",
+    "*.html",
+    ",*.txt",
+    "*.png",
+    "*sample*",
+    "*.rar",
+    "*.sup",
+    "*.idx",
+    "*.sub",
+    "*.srt",
+    "*.sfv",
+    "*.DS_Store*",
+    "*proof*",
+    "*.url"
+  ]
+}
