@@ -75,6 +75,8 @@ def createMovieDump(config: dict(), dumpFile: str):
 
     # Fetch
     for movie in matcher.movieData.keys():
+        if movie.databaseId == -1:
+            continue
         matcher.fetchDetails(movie, movie.databaseId)
     return matcher
 
